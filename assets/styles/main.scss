@@ -1,0 +1,19 @@
+/************
+ * Partials *
+ ************/
+@import "partials/base";
+
+/***********
+ * Globals *
+ ***********/
+html, body, div, span, h1, h2, h3, h4,
+h5, h6, p, a, img, i, ol, ul, li, form,
+label, table, caption {
+	margin: 0;
+	padding: 0;
+}
+html, body {
+	font-family: $base-font-family;
+	font-size: $base-font-size;
+	line-height: $base-line-height;
+}

@@ -1,0 +1,33 @@
+ul.board {
+	margin: 0 auto;
+	list-style: none;
+
+	li.board-row {
+
+		ul.board-row-list {
+
+			li.board-square {
+				float: left;
+				font-size: 0;
+				background-color: #fff;
+				border: 1px solid #ddd;
+				border-style: solid solid none none;
+			}
+			li.board-square:first-child {
+				border-style: solid solid none solid;
+			}
+		}
+	}
+	li.board-row:last-child {
+
+		ul.board-row-list {
+
+			li.board-square {
+				border-style: solid solid solid none;
+			}
+			li.board-square:first-child {
+				border-style: solid solid solid solid;
+			}
+		}
+	}
+}
