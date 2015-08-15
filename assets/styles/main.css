@@ -20,7 +20,7 @@ ul.board {
     float: left;
     font-size: 0;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #eee;
     border-style: solid solid none none; }
   ul.board li.board-row ul.board-row-list li.board-square:first-child {
     border-style: solid solid none solid; }

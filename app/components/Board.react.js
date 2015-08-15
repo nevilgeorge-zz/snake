@@ -37,10 +37,10 @@ var Board = React.createClass({
 			var rowSquares = [];
 
 			for (var j=0; j<this.state.numXSquares; j++) {
-				rowSquares.push(<li className="board-square" style={squareStyle}></li>);
+				rowSquares.push(<li key={j} className="board-square" style={squareStyle}></li>);
 			}
 
-			board.push(<li className="board-row"><ul className="board-row-list">{rowSquares}</ul></li>);
+			board.push(<li key={i} className="board-row"><ul className="board-row-list">{rowSquares}</ul></li>);
 		}
 
 		var boardStyle = {
