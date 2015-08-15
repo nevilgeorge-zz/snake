@@ -27,7 +27,7 @@ ul.board {
       border-color: #eee; }
     ul.board li.board-row ul.board-row-list li.snake-square {
       background-color: #47AAD6;
-      border-color: #3988AB; }
+      border-color: #47AAD6; }
     ul.board li.board-row ul.board-row-list li.food-square {
       background-color: #9660D6;
       border-color: #9660D6; }

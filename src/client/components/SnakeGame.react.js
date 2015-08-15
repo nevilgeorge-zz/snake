@@ -4,25 +4,12 @@ var SnakeGameActions = require('../actions/SnakeGameActions');
 
 var SnakeGame = React.createClass({
 
-	render: function () {
-		$(function(){
-		    $('html').keypress(function(e){
-		        this._onKeyDown(e);
-		    });
-		});
-		return (
-			<div>
-				<Board 
-				/>
-			</div>
-		);
-	},
-
 	_onKeyDown: function (event) {
 		var direction;
-		switch (event) {
+		switch (event.keyCode) {
 			case 38:
 				direction = "up";
+				break;
 			case 39:
 				direction = "right";
 				break;
@@ -34,11 +21,24 @@ var SnakeGame = React.createClass({
 				break;
 			default:
 				direction = null;
+				break;
 		}
-		if (direction != null) {
+		if (direction !== null) {
 			SnakeGameActions.changeDirection(direction);
-			console.log(direction);
 		}
+	},
+
+	render: function () {
+		var self = this;
+		$('html').keydown(function(e){
+	        self._onKeyDown(e);
+	    });
+		return (
+			<div>
+				<Board 
+				/>
+			</div>
+		);
 	}
 
 });

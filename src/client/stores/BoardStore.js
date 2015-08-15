@@ -185,7 +185,7 @@ AppDispatcher.register(function (action) {
 
 	switch (action.actionType) {
 		case SnakeGameConstants.CHANGE_DIRECTION:
-			changeDirection(direction);
+			changeDirection(action.direction);
 			BoardStore.emitChange();
 			break;
 
