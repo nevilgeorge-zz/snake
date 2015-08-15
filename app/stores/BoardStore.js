@@ -37,7 +37,7 @@ function initBoard() {
 
 	_foodIndex = _getRandomNumber(max);
 	var head = Math.floor(max / 2);
-	_snakeIndices = [head, head+1, head+2];
+	_snakeIndices = [head, head+_numYSquares, head+ 2 * _numYSquares];
 
 	for (var i = 0; i < max; i++) {
 			_board.push(new Square(SquareType.EMPTY));
@@ -61,21 +61,20 @@ function isCollision() {
 }
 
 function getNewSnakeIndices() {
-		var newIndices = _snakeIndices.map(function(position) {
-			return position - _numXSquares;
-		});
-		_snakeIndices = newIndices;
-		return newIndices;
+	var head = _snakeIndices[0];
+	_snakeIndices.pop();
+	_snakeIndices.unshift(head + _numYSquares);
+	return _snakeIndices;
 }
 
-function updateBoard() {
-		var max = _numXSquares + _numYSquares;
+function updateBoard(snakeIndices) {
+		var max = _numXSquares * _numYSquares;
 		for (var i = 0; i < max; i++) {
 			_board.push(new Square(SquareType.EMPTY));
 		}
 
 		for (var i = 0; i < _snakeIndices.length; i++) {
-			_board[_snakeIndices[i]].type = SquareType.SNAKE;
+			_board[snakeIndices[i]].type = SquareType.SNAKE;
 		}
 
 		return _board;
@@ -113,7 +112,7 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 
 	progressGame: function() {
 		var newSnakeIndices = getNewSnakeIndices(_snakeIndices);
-		return updateBoard();
+		return updateBoard(newSnakeIndices);
 	}
 });
 

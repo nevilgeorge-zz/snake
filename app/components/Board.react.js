@@ -28,9 +28,10 @@ var Board = React.createClass({
 
 	loopGame: function() {
 		var that = this;
-		setInterval(function() {
-			that.setState({boardSquares: BoardStore.progressGame()});
+		setTimeout(function() {
+				that.setState({boardSquares: BoardStore.progressGame()});
 		}, 600);
+
 	},
 
 	render: function () {

@@ -4,53 +4,52 @@
   "description": "Best snake game ever",
   "main": "app/app.js",
   "dependencies": {
-		"classnames": "^2.1.3",
-		"flux": "^2.0.1",
-		"keymirror": "~0.1.0",
-		"object-assign": "^1.0.0",
-		"react": "^0.12.0",
-		"express": "^4.13.3",
-		"socket.io": "^1.3.6"
-	},
-	"devDependencies": {
-		"browserify": "^6.2.0",
-		"envify": "^3.0.0",
-		"jest-cli": "^0.4.3",
-		"reactify": "^0.15.2",
-		"uglify-js": "~2.4.15",
-		"watchify": "^2.1.1",
+    "classnames": "^2.1.3",
+    "express": "^4.13.3",
+    "flux": "^2.0.1",
+    "keymirror": "~0.1.0",
+    "object-assign": "^1.0.0",
+    "react": "^0.12.0",
+    "socket.io": "^1.3.6"
+  },
+  "devDependencies": {
+    "browserify": "^6.2.0",
     "envify": "~1.2.1",
+    "jest-cli": "^0.4.3",
+    "reactify": "^0.15.2",
+    "uglify-js": "~2.4.15",
+    "watchify": "^2.1.1",
     "react": "~0.10.0",
     "gulp": "~3.8.5",
     "gulp-notify": "~1.4.0",
     "gulp-util": "~2.2.19",
     "vinyl-source-stream": "~0.1.1"
-	},
-	"scripts": {
-		"start": "nodemon server.js",
-		"poststart": "watchify -o app/bundle.js -v -d app/app.js",
-		"build": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > app/bundle.min.js",
-		"test": "jest"
-	},
-	"author": "Nevil George, Jon Rovira, Josh Roberts",
-	"browserify": {
-		"transform": [
-			"reactify",
-			"envify"
-		]
-	},
-	"test": {
-		"rootDir": "./app"
-	},
-	"bugs": {
-		"url": "https://github.com/nevilgeorge/snake/issues"
-	},
-	"keywords": [
-		"snake",
-		"game"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/nevilgeorge/snake.git"
-	}
+  },
+  "scripts": {
+    "start": "nodemon server.js",
+    "poststart": "watchify -o app/bundle.js -v -d app/app.js",
+    "build": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > app/bundle.min.js",
+    "test": "jest"
+  },
+  "author": "Nevil George, Jon Rovira, Josh Roberts",
+  "browserify": {
+    "transform": [
+      "reactify",
+      "envify"
+    ]
+  },
+  "test": {
+    "rootDir": "./app"
+  },
+  "bugs": {
+    "url": "https://github.com/nevilgeorge/snake/issues"
+  },
+  "keywords": [
+    "snake",
+    "game"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nevilgeorge/snake.git"
+  }
 }
