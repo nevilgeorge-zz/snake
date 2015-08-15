@@ -1,16 +1,14 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
+var classNames = require('classnames');
+
 var BoardSquare = React.createClass({
 
 	propTypes: {
-		side: ReactPropTypes.number.isRequired
-	},
-
-	getInitialState: function () {
-		return {
-
-		}
+		side: ReactPropTypes.number.isRequired,
+		isSnake: ReactPropTypes.bool.isRequired,
+		isFood: ReactPropTypes.bool.isRequired
 	},
 
 	render: function () {
@@ -20,7 +18,12 @@ var BoardSquare = React.createClass({
 		};
 
 		return (
-			<li className="board-square" style={squareStyle}></li>
+			<li className={classNames({
+				'snake-square': this.props.isSnake,
+				'food-square': this.props.isFood,
+				'board-square': !this.props.isSnake && !this.props.isFood,
+			})}
+			style={squareStyle}></li>
 		);
 	}
 

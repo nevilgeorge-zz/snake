@@ -7,7 +7,8 @@ function getBoardState () {
 		squareSide: BoardStore.getSquareSide(),
 		numXSquares: BoardStore.getNumXSquares(),
 		numYSquares: BoardStore.getNumYSquares(),
-		numSquares: BoardStore.getNumSquares()
+		numSquares: BoardStore.getNumSquares(),
+		boardSquares: BoardStore.getBoardSquares()
 	};
 }
 
@@ -32,7 +33,14 @@ var Board = React.createClass({
 			var rowSquares = [];
 
 			for (var j=0; j<this.state.numXSquares; j++) {
-				rowSquares.push(<BoardSquare key={j} side={this.state.squareSide-1} />);
+				rowSquares.push(
+					<BoardSquare
+						key={j}
+						isSnake={false}
+						isFood={false}
+						side={this.state.squareSide-1}
+					/>
+				);
 			}
 
 			board.push(<li key={i} className="board-row"><ul className="board-row-list">{rowSquares}</ul></li>);
