@@ -1,5 +1,5 @@
 var React = require('react');
-var ReactPropTypes = React.PropTypes;
+var BoardSquare = require('./BoardSquare.react');
 var BoardStore = require('../stores/BoardStore');
 
 function getBoardState () {
@@ -8,7 +8,7 @@ function getBoardState () {
 		numXSquares: BoardStore.getNumXSquares(),
 		numYSquares: BoardStore.getNumYSquares(),
 		numSquares: BoardStore.getNumSquares()
-	}
+	};
 }
 
 var Board = React.createClass({
@@ -28,16 +28,11 @@ var Board = React.createClass({
 	render: function () {
 		var board = [];
 
-		var squareStyle = {
-			width: this.state.squareSide-1,
-			height: this.state.squareSide-1
-		};
-
 		for (var i=0; i<this.state.numYSquares; i++) {
 			var rowSquares = [];
 
 			for (var j=0; j<this.state.numXSquares; j++) {
-				rowSquares.push(<li key={j} className="board-square" style={squareStyle}></li>);
+				rowSquares.push(<BoardSquare key={j} side={this.state.squareSide-1} />);
 			}
 
 			board.push(<li key={i} className="board-row"><ul className="board-row-list">{rowSquares}</ul></li>);

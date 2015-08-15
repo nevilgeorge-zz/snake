@@ -6,10 +6,24 @@ var CHANGE_EVENT = 'change';
 
 var _MAX_BOARD_SQUARE_SIDE = 30;
 var _numXSquares = Math.ceil(window.innerWidth / _MAX_BOARD_SQUARE_SIDE);
-var _squareSide = Math.floor(window.innerWidth / _numXSquares) - 2;
-var _numYSquares = Math.floor(window.innerHeight / (_squareSide + 2));
+var _squareSide = Math.floor(window.innerWidth / _numXSquares) - 5;
+var _numYSquares = Math.floor(window.innerHeight / (_squareSide + 5));
 var _numSquares = _numXSquares * _numYSquares;
 var _board = [];
+var _snake = [
+	{
+		x: 5,
+		y: 5
+	},
+	{
+		x: 5,
+		y: 6
+	},
+	{
+		x: 5,
+		y: 7
+	}
+];
 
 var BoardStore = assign({}, EventEmitter.prototype, {
 
@@ -40,7 +54,7 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 
 AppDispatcher.register(function (action) {
 
-	switch(action.actionType) {
+	switch (action.actionType) {
 		
 	}
 
