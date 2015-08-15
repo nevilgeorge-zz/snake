@@ -1,102 +1,104 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
+var SnakeGameConstants = require('../constants/SnakeGameConstants');
 var assign = require('object-assign');
-var Square = require('../../server/models/Square');
 
 var CHANGE_EVENT = 'change';
-var SquareType = {
+
+/**
+ * Constants, Enums
+ */
+var _MAX_SQUARE_SIDE_SIZE = 30;
+
+var BoardSquareTypes = {
 	EMPTY: 'empty',
 	FOOD: 'food',
 	SNAKE: 'snake'
 };
 
-var Direction = {
+var Directions = {
 	UP: 'up',
 	DOWN: 'down',
 	LEFT: 'left',
 	RIGHT: 'right'
 };
 
-var _MAX_BOARD_SQUARE_SIDE = 30;
-var _numXSquares = Math.ceil(window.innerWidth / _MAX_BOARD_SQUARE_SIDE);
-var _squareSide = Math.floor(window.innerWidth / _numXSquares) - 5;
-var _numYSquares = Math.floor(window.innerHeight / (_squareSide + 5));
-var _numSquares = _numXSquares * _numYSquares;
-
-var _board = [];
-var _foodIndex = _getRandomNumber(_numXSquares * _numYSquares);
-var _snakeIndices = []
-initBoard();
-
-function _getRandomNumber(max) {
-	return Math.floor(Math.random() * max);
+/**
+ * Initializers
+ */
+function initBoardDimensions() {
+	_numXSquares = Math.ceil(window.innerWidth / _MAX_SQUARE_SIDE_SIZE);
+	_squareSide  = Math.floor(window.innerWidth / _numXSquares) - 5;
+	_numYSquares = Math.floor(window.innerHeight / (_squareSide + 5));
 }
 
-function initBoard() {
-	var max = _numXSquares * _numYSquares;
-
-	_foodIndex = _getRandomNumber(max);
-	var head = Math.floor(max / 2);
-	_snakeIndices = [head, head+1, head+2];
-
-	for (var i = 0; i < max; i++) {
-			_board.push(new Square(SquareType.EMPTY));
-	}
-
-	for (var i = 0; i < _snakeIndices.length; i++) {
-		_board[_snakeIndices[i]].type = SquareType.SNAKE;
-	}
-
-	_board[_foodIndex].type = SquareType.FOOD;
-}
-
-function isCollision() {
-	var head = _snakeIndices[0];
-	for (var i = 1; i < _snakeIndices.length; i++) {
-		if (head === _snakeIndices[i]) {
-			return true;
+function initBoardState() {
+	// initialize all to empty first
+	_board = [];
+	for (var i=0; i<_numXSquares; i++) {
+		for (var j=0; j<_numYSquares; j++) {
+			_board.push({
+				type: BoardSquareTypes.EMPTY,
+				x: i,
+				y: j
+			});
 		}
 	}
-	return false;
-}
 
-function getNewSnakeIndices() {
-		var newIndices = _snakeIndices.map(function(position) {
-			return position - _numXSquares;
-		});
-		_snakeIndices = newIndices;
-		return newIndices;
-}
-
-function updateBoard() {
-		var max = _numXSquares + _numYSquares;
-		for (var i = 0; i < max; i++) {
-			_board.push(new Square(SquareType.EMPTY));
+	// create food and snake indices
+	_foodPosition = {
+		type: BoardSquareTypes.FOOD,
+		x: Math.floor(Math.random() * _numXSquares),
+		y: Math.floor(Math.random() * _numYSquares)
+	};
+	_snakePositions = [
+		{
+			type: BoardSquareTypes.SNAKE,
+			x: Math.floor(_numXSquares / 2),
+			y: Math.floor(_numYSquares / 2)
+		},
+		{
+			type: BoardSquareTypes.SNAKE,
+			x: Math.floor(_numXSquares / 2) + 1,
+			y: Math.floor(_numYSquares / 2)
+		},
+		{
+			type: BoardSquareTypes.SNAKE,
+			x: Math.floor(_numXSquares / 2) + 2,
+			y: Math.floor(_numYSquares / 2)
 		}
+	];
+	_direction = Directions.LEFT;
 
-		for (var i = 0; i < _snakeIndices.length; i++) {
-			_board[_snakeIndices[i]].type = SquareType.SNAKE;
-		}
+	// then update board state
+	updateBoardState();
 
-		return _board;
+	// start play cycle
+	_game = setInterval(function () {
+		progressGame();
+	}, 600); 
 }
 
+/**
+ * Flux Board Store
+ */
 var BoardStore = assign({}, EventEmitter.prototype, {
 
-	getSquareSide: function () {
-		return _squareSide;
+	getBoardState: function() {
+		return _board;
 	},
 
-	getNumXSquares: function () {
-		return _numXSquares;
+	getDimensions: function () {
+		return {
+			squareSide: _squareSide,
+			numXSquares: _numXSquares,
+			numYSquares: _numYSquares,
+			numSquares: _numXSquares * _numYSquares
+		};
 	},
 
-	getNumYSquares: function () {
-		return _numYSquares;
-	},
-
-	getNumSquares: function () {
-		return _numSquares;
+	emitChange: function () {
+		this.emit(CHANGE_EVENT);
 	},
 
 	addChangeListener: function (callback) {
@@ -106,21 +108,89 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
-
-	getBoardSquares: function() {
-		return _board;
-	},
-
-	progressGame: function() {
-		var newSnakeIndices = getNewSnakeIndices(_snakeIndices);
-		return updateBoard();
-	}
 });
+
+/**
+ * Private Variable Initializations
+ */
+var _numXSquares,
+	_numYSquares,
+	_squareSide,
+	_board,
+	_foodPosition,
+	_snakePositions,
+	_direction,
+	_game;
+initBoardDimensions();
+initBoardState();
+
+
+
+function progressGame() {
+	moveSnake();
+	updateBoardState();
+}
+
+function updateBoardState() {
+	_board[(_foodPosition.y * _numXSquares) + _foodPosition.x].type = BoardSquareTypes.FOOD;
+	for (i=0; i<_snakePositions.length; i++) {
+		_board[(_snakePositions[i].y * _numXSquares) + _snakePositions[i].x].type = BoardSquareTypes.SNAKE;
+	}
+	BoardStore.emitChange();
+}
+
+function moveSnake() {
+	popTail();
+	var head = _snakePositions[0];
+	var newHeadX,
+	    newHeadY;
+
+	switch (_direction) {
+		case Directions.UP:
+			newHeadX = head.x;
+			newHeadY = head.y - 1;
+			break;
+		case Directions.RIGHT:
+			newHeadX = head.x + 1;
+			newHeadY = head.y;
+			break;
+		case Directions.DOWN:
+			newHeadX = head.x;
+			newHeadY = head.y + 1;
+			break;
+		case Directions.LEFT:
+			newHeadX = head.x - 1;
+			newHeadY = head.y;
+			break;
+	}
+
+	_snakePositions.unshift({
+		type: BoardSquareTypes.SNAKE,
+		x: newHeadX,
+		y: newHeadY
+	});
+	updateBoardState();
+}
+
+function popTail() {
+	var tail = _snakePositions.pop();
+	_board[(tail.y * _numXSquares) + tail.x].type = BoardSquareTypes.EMPTY;
+}
+
+function changeDirection(direction) {
+	_direction = direction;
+}
 
 AppDispatcher.register(function (action) {
 
 	switch (action.actionType) {
+		case SnakeGameConstants.CHANGE_DIRECTION:
+			changeDirection(direction);
+			BoardStore.emitChange();
+			break;
 
+		default:
+			//no op
 	}
 
 });

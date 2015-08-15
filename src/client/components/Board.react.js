@@ -4,11 +4,8 @@ var BoardStore = require('../stores/BoardStore');
 
 function getBoardState () {
 	return {
-		squareSide: BoardStore.getSquareSide(),
-		numXSquares: BoardStore.getNumXSquares(),
-		numYSquares: BoardStore.getNumYSquares(),
-		numSquares: BoardStore.getNumSquares(),
-		boardSquares: BoardStore.getBoardSquares()
+		boardState: BoardStore.getBoardState(),
+		dimensions: BoardStore.getDimensions()
 	};
 }
 
@@ -26,27 +23,21 @@ var Board = React.createClass({
 		BoardStore.removeChangeListener(this._onChange);
 	},
 
-	loopGame: function() {
-		var that = this;
-		setInterval(function() {
-			that.setState({boardSquares: BoardStore.progressGame()});
-		}, 600);
-	},
 
 	render: function () {
+		var boardState = this.state.boardState;
 		var board = [];
-		var boardSquares = this.state.boardSquares;
 
-		for (var i=0; i<this.state.numYSquares; i++) {
+		for (var i=0; i<this.state.dimensions.numYSquares; i++) {
 			var rowSquares = [];
 
-			for (var j=0; j<this.state.numXSquares; j++) {
-				var square = boardSquares[j * this.state.numYSquares + i];
+			for (var j=0; j<this.state.dimensions.numXSquares; j++) {
+				var square = boardState[(i*this.state.dimensions.numXSquares) + j];
 				rowSquares.push(
 					<BoardSquare
 						key={j}
 						type={square.type}
-						side={this.state.squareSide-1}
+						side={this.state.dimensions.squareSide-1}
 					/>
 				);
 			}
@@ -55,11 +46,9 @@ var Board = React.createClass({
 		}
 
 		var boardStyle = {
-			marginTop: (window.innerHeight - (this.state.squareSide*this.state.numYSquares)) / 2,
-			width: (this.state.squareSide * this.state.numXSquares) + 1
+			marginTop: (window.innerHeight - (this.state.dimensions.squareSide*this.state.dimensions.numYSquares)) / 2,
+			width: (this.state.dimensions.squareSide * this.state.dimensions.numXSquares) + 1
 		};
-
-		this.loopGame();
 
 		return (
 			<ul className="board" style={boardStyle}>
