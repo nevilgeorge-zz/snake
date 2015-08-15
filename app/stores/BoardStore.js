@@ -1,13 +1,20 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
-var Square = require('../models/Square');
+var Square = require('../../models/Square');
 
 var CHANGE_EVENT = 'change';
 var SquareType = {
 	EMPTY: 'empty',
 	FOOD: 'food',
 	SNAKE: 'snake'
+};
+
+var Direction = {
+	UP: 'up',
+	DOWN: 'down',
+	LEFT: 'left',
+	RIGHT: 'right'
 };
 
 var _MAX_BOARD_SQUARE_SIDE = 30;
@@ -19,16 +26,16 @@ var _numSquares = _numXSquares * _numYSquares;
 var _board = [];
 var _foodIndex = _getRandomNumber(_numXSquares * _numYSquares);
 var _snakeIndices = []
-initSquares();
+initBoard();
 
-function getRandomNumber(max) {
-	return Math.floor(Math.random() * max));
+function _getRandomNumber(max) {
+	return Math.floor(Math.random() * max);
 }
 
 function initBoard() {
 	var max = _numXSquares * _numYSquares;
 
-	_foodIndex = getRandomNumber(max);
+	_foodIndex = _getRandomNumber(max);
 	var head = Math.floor(max / 2);
 	_snakeIndices = [head, head+1, head+2];
 
@@ -51,6 +58,27 @@ function isCollision() {
 		}
 	}
 	return false;
+}
+
+function getNewSnakeIndices() {
+		var newIndices = _snakeIndices.map(function(position) {
+			return position - _numXSquares;
+		});
+		_snakeIndices = newIndices;
+		return newIndices;
+}
+
+function updateBoard() {
+		var max = _numXSquares + _numYSquares;
+		for (var i = 0; i < max; i++) {
+			_board.push(new Square(SquareType.EMPTY));
+		}
+
+		for (var i = 0; i < _snakeIndices.length; i++) {
+			_board[_snakeIndices[i]].type = SquareType.SNAKE;
+		}
+
+		return _board;
 }
 
 var BoardStore = assign({}, EventEmitter.prototype, {
@@ -81,6 +109,11 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 
 	getBoardSquares: function() {
 		return _board;
+	},
+
+	progressGame: function() {
+		var newSnakeIndices = getNewSnakeIndices(_snakeIndices);
+		return updateBoard();
 	}
 });
 

@@ -26,18 +26,26 @@ var Board = React.createClass({
 		BoardStore.removeChangeListener(this._onChange);
 	},
 
+	loopGame: function() {
+		var that = this;
+		setInterval(function() {
+			that.setState({boardSquares: BoardStore.progressGame()});
+		}, 600);
+	},
+
 	render: function () {
 		var board = [];
+		var boardSquares = this.state.boardSquares;
 
 		for (var i=0; i<this.state.numYSquares; i++) {
 			var rowSquares = [];
 
 			for (var j=0; j<this.state.numXSquares; j++) {
+				var square = boardSquares[j * this.state.numYSquares + i];
 				rowSquares.push(
 					<BoardSquare
 						key={j}
-						isSnake={false}
-						isFood={false}
+						type={square.type}
 						side={this.state.squareSide-1}
 					/>
 				);
@@ -50,6 +58,8 @@ var Board = React.createClass({
 			marginTop: (window.innerHeight - (this.state.squareSide*this.state.numYSquares)) / 2,
 			width: (this.state.squareSide * this.state.numXSquares) + 1
 		};
+
+		this.loopGame();
 
 		return (
 			<ul className="board" style={boardStyle}>

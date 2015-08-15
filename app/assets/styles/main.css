@@ -24,6 +24,22 @@ ul.board {
     border-style: solid solid none none; }
   ul.board li.board-row ul.board-row-list li.board-square:first-child {
     border-style: solid solid none solid; }
+  ul.board li.board-row ul.board-row-list li.snake-square {
+    float: left;
+    font-size: 0;
+    background-color: green;
+    border: 1px solid #eee;
+    border-style: solid solid none none; }
+  ul.board li.board-row ul.board-row-list li.snake-square:first-child {
+    border-style: solid solid none solid; }
+  ul.board li.board-row ul.board-row-list li.food-square {
+    float: left;
+    font-size: 0;
+    background-color: yellow;
+    border: 1px solid #eee;
+    border-style: solid solid none none; }
+  ul.board li.board-row ul.board-row-list li.food-square:first-child {
+    border-style: solid solid none solid; }
   ul.board li.board-row:last-child ul.board-row-list li.board-square {
     border-style: solid solid solid none; }
   ul.board li.board-row:last-child ul.board-row-list li.board-square:first-child {

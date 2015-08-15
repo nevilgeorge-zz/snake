@@ -1,9 +1,8 @@
 // Square.js
 'use strict';
 
-function Square(args) {
-  this.isSnake = args.isSnake;
-  this.isFood = args.isFood;
+function Square(type) {
+  this.type = type;
 }
 
 module.exports = Square;

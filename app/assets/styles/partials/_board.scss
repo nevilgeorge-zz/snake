@@ -16,6 +16,27 @@ ul.board {
 			li.board-square:first-child {
 				border-style: solid solid none solid;
 			}
+			li.snake-square {
+				float: left;
+				font-size: 0;
+				background-color: green;
+				border: 1px solid #eee;
+				border-style: solid solid none none;
+			}
+			li.snake-square:first-child {
+				border-style: solid solid none solid;
+			}
+
+			li.food-square {
+				float: left;
+				font-size: 0;
+				background-color: yellow;
+				border: 1px solid #eee;
+				border-style: solid solid none none;
+			}
+			li.food-square:first-child {
+				border-style: solid solid none solid;
+			}
 		}
 	}
 	li.board-row:last-child {
