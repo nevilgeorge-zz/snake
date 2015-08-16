@@ -4,9 +4,14 @@ var BoardStore = require('../stores/BoardStore');
 
 function getBoardState () {
 	return {
+<<<<<<< HEAD
 		boardState: BoardStore.getBoardState(),
 		dimensions: BoardStore.getDimensions(),
 		players: BoardStore.getPlayers()
+=======
+		boardState: BoardStore.getBoard(),
+		dimensions: BoardStore.getDimensions()
+>>>>>>> master
 	};
 }
 
@@ -28,16 +33,16 @@ var Board = React.createClass({
 		var boardState = this.state.boardState;
 		var board = [];
 
-		for (var i=0; i<this.state.dimensions.numYSquares; i++) {
+		for (var i=0; i<this.state.dimensions.yMax; i++) {
 			var rowSquares = [];
 
-			for (var j=0; j<this.state.dimensions.numXSquares; j++) {
-				var square = boardState[(i*this.state.dimensions.numXSquares) + j];
+			for (var j=0; j<this.state.dimensions.xMax; j++) {
+				var square = boardState[(i*this.state.dimensions.xMax) + j];
 				rowSquares.push(
 					<BoardSquare
 						key={j}
 						type={square.type}
-						side={this.state.dimensions.squareSide-1}
+						side={this.state.dimensions.side-1}
 					/>
 				);
 			}
@@ -46,8 +51,8 @@ var Board = React.createClass({
 		}
 
 		var boardStyle = {
-			marginTop: (window.innerHeight - (this.state.dimensions.squareSide*this.state.dimensions.numYSquares)) / 2,
-			width: (this.state.dimensions.squareSide * this.state.dimensions.numXSquares) + 1
+			marginTop: (window.innerHeight - (this.state.dimensions.side*this.state.dimensions.yMax)) / 2,
+			width: (this.state.dimensions.side * this.state.dimensions.xMax) + 1
 		};
 
 		return (
