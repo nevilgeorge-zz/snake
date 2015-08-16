@@ -42,7 +42,7 @@ io.on('connection', function(socket) {
     players.splice(index, 1);
 
     console.log('Player #' + player.playerId + ' has left the game.')
-    socket.emit('remove', player);
+    socket.emit('update:players', players);
   });
 });
 
