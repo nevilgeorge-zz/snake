@@ -28,6 +28,18 @@ var SnakeGame = React.createClass({
 		}
 	},
 
+	componentDidMount: function() {
+		var socket = io.connect();
+
+		socket.on('newPlayer', function(player) {
+			SnakeGameActions.addPlayer(player);
+		});
+	},
+
+	startGame: function() {
+			SnakeGameActions.startGame();
+	},
+
 	render: function () {
 		var self = this;
 		$('html').keydown(function(e){
@@ -35,8 +47,8 @@ var SnakeGame = React.createClass({
 	    });
 		return (
 			<div>
-				<Board 
-				/>
+				<Board/>
+				<button onClick={this.startGame}>Start</button>
 			</div>
 		);
 	}

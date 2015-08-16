@@ -44,6 +44,9 @@ function initBoardState() {
 			});
 		}
 	}
+}
+
+function startGame() {
 
 	// create food and snake indices
 	_foodPosition = {
@@ -76,7 +79,7 @@ function initBoardState() {
 	// start play cycle
 	_game = setInterval(function () {
 		progressGame();
-	}, 600); 
+	}, 100);
 }
 
 /**
@@ -95,6 +98,10 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 			numYSquares: _numYSquares,
 			numSquares: _numXSquares * _numYSquares
 		};
+	},
+
+	getPlayers: function() {
+		return _players;
 	},
 
 	emitChange: function () {
@@ -120,7 +127,8 @@ var _numXSquares,
 	_foodPosition,
 	_snakePositions,
 	_direction,
-	_game;
+	_game,
+	_players = [];
 initBoardDimensions();
 initBoardState();
 
@@ -181,11 +189,25 @@ function changeDirection(direction) {
 	_direction = direction;
 }
 
+function addNewPlayer(player) {
+	_players.push(player);
+}
+
 AppDispatcher.register(function (action) {
 
 	switch (action.actionType) {
 		case SnakeGameConstants.CHANGE_DIRECTION:
 			changeDirection(action.direction);
+			BoardStore.emitChange();
+			break;
+
+		case SnakeGameConstants.ADD_PLAYER:
+			addNewPlayer(action.player);
+			BoardStore.emitChange();
+			break;
+
+		case SnakeGameConstants.START_GAME:
+			startGame();
 			BoardStore.emitChange();
 			break;
 

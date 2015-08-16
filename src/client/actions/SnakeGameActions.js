@@ -10,6 +10,19 @@ var SnakeGameActions = {
 		});
 	},
 
+	addPlayer: function(player) {
+		AppDispatcher.dispatch({
+			actionType: SnakeGameConstants.ADD_PLAYER,
+			player: player
+		});
+	},
+
+	startGame: function() {
+		AppDispatcher.dispatch({
+			actionType: SnakeGameConstants.START_GAME
+		});
+	}
+
 };
 
 module.exports = SnakeGameActions;

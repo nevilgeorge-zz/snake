@@ -5,7 +5,8 @@ var BoardStore = require('../stores/BoardStore');
 function getBoardState () {
 	return {
 		boardState: BoardStore.getBoardState(),
-		dimensions: BoardStore.getDimensions()
+		dimensions: BoardStore.getDimensions(),
+		players: BoardStore.getPlayers()
 	};
 }
 
@@ -22,7 +23,6 @@ var Board = React.createClass({
 	componentWillUnmount: function () {
 		BoardStore.removeChangeListener(this._onChange);
 	},
-
 
 	render: function () {
 		var boardState = this.state.boardState;
