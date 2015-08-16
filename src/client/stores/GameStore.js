@@ -23,7 +23,7 @@ var CHANGE_EVENT = 'change';
  * Private variables
  */
 var _game;
-
+var _players = [];
 
 /**
  * Helper functions
@@ -33,6 +33,7 @@ function progressGame () {
 }
 
 function startGame () {
+  console.log('starting game');
 	_game = setInterval(function () {
 		progressGame();
 	}, 100);
@@ -42,6 +43,9 @@ function endGame () {
 	clearInterval(_game);
 }
 
+function updatePlayers(players) {
+  _players = players;
+}
 
 /**
  * Flux Game Store
@@ -59,7 +63,7 @@ var GameStore = assign({}, EventEmitter.prototype, {
 	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
-	
+
 });
 
 
@@ -67,6 +71,7 @@ var GameStore = assign({}, EventEmitter.prototype, {
  * Actions from dispather
  */
 GameStore.dispatchToken = AppDispatcher.register(function (action) {
+  console.log(action);
 	switch (action.actionType) {
 
 		case SnakeGameConstants.ADD_SNAKE:
@@ -90,10 +95,16 @@ GameStore.dispatchToken = AppDispatcher.register(function (action) {
 			break;
 
 		case SnakeGameConstants.START_GAME:
+      console.log('starting')
 			startGame();
 			GameStore.emitChange();
 			break;
 
+    case SnakeGameConstants.UPDATE_PLAYERS:
+      console.log('updating');
+      updatePlayers(action.players);
+      BoardStore.emitChange();
+      break;
 	}
 });
 

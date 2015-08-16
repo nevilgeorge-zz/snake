@@ -5,6 +5,32 @@ var SnakeGameActions = require('../actions/SnakeGameActions');
 
 var SnakeGame = React.createClass({
 
+	getInitialState: function() {
+		return {
+			gameStarted: false,
+			players: [],
+			playerScores: {}
+		};
+	},
+
+	startGame: function() {
+		SnakeGameActions.startGame();
+	},
+
+	componentDidMount: function() {
+		var socket = io.connect();
+
+		socket.on('update:players', function(players) {
+			console.log(players);
+			SnakeGameActions.updatePlayers(players);
+			this.setState({players: players});
+		}.bind(this));
+
+		socket.on('update:scores', function(scores) {
+			this.setState({playerScores: scores});
+		}.bind(this));
+	},
+
 	_onKeyDown: function (event) {
 		var direction;
 		switch (event.keyCode) {
@@ -36,10 +62,9 @@ var SnakeGame = React.createClass({
 	    });
 		return (
 			<div>
-				<GameInfo
-				/>
-				<Board 
-				/>
+				<GameInfo/>
+				<Board/>
+				<button onClick={this.startGame} disabled={this.state.gameStarted}>Start</button>
 			</div>
 		);
 	}

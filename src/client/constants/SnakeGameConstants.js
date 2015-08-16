@@ -8,6 +8,7 @@ module.exports = keyMirror({
 	REMOVE_FOOD: null,
 	REMOVE_SNAKE: null,
 	SPAWN_FOOD: null,
-	START_GAME: null
+	START_GAME: null,
+	UPDATE_PLAYERS: null
 
 });

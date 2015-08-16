@@ -5,45 +5,52 @@ var SnakeGameActions = {
 
 	addSnake: function (color) {
 		AppDispatcher.dispatch({
-			actionType: TodoConstants.ADD_SNAKE,
+			actionType: SnakeGameConstants.ADD_SNAKE,
 			color: color
 		});
 	},
 	changeDirection: function (key, direction) {
 		AppDispatcher.dispatch({
-			actionType: TodoConstants.CHANGE_DIRECTION,
+			actionType: SnakeGameConstants.CHANGE_DIRECTION,
 			key: key,
 			direction: direction
 		});
 	},
 	endGame: function () {
 		AppDispatcher.dispatch({
-			actionType: TodoConstants.END_GAME,
+			actionType: SnakeGameConstants.END_GAME,
 		});
 	},
 	removeFood: function (key) {
 		AppDispatcher.dispatch({
-			actionType: TodoConstants.REMOVE_FOOD,
+			actionType: SnakeGameConstants.REMOVE_FOOD,
 			key: key
 		});
 	},
 	removeSnake: function (key) {
 		AppDispatcher.dispatch({
-			actionType: TodoConstants.REMOVE_SNAKE,
+			actionType: SnakeGameConstants.REMOVE_SNAKE,
 			key: key
 		});
 	},
 	spawnFood: function (coords) {
 		AppDispatcher.dispatch({
-			actionType: TodoConstants.SPAWN_FOOD,
+			actionType: SnakeGameConstants.SPAWN_FOOD,
 			coords: coords
+		});
+	},
+	updatePlayers: function(players) {
+		console.log(players);
+		AppDispatcher.dispatch({
+			actionType: SnakeGameConstants.UPDATE_PLAYERS,
+			players: players
 		});
 	},
 	startGame: function () {
 		AppDispatcher.dispatch({
-			actionType: TodoConstants.START_GAME
+			actionType: SnakeGameConstants.START_GAME
 		});
-	},
+	}
 
 };
 

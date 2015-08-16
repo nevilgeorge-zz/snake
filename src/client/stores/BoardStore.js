@@ -34,7 +34,6 @@ var _xMax,
     _side;
 var _board = [];
 
-
 /**
  * Helper functions
  */
@@ -79,7 +78,6 @@ function indexToCoord (i) {
 	return coord;
 }
 
-
 /**
  * Flux Board Store
  */
@@ -122,7 +120,7 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 		}
 		return coords;
 	},
-	
+
 	emitChange: function () {
 		this.emit(CHANGE_EVENT);
 	},
@@ -133,8 +131,7 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 
 	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
-	},
-
+	}
 });
 
 
@@ -175,9 +172,6 @@ BoardStore.dispatchToken = AppDispatcher.register(function (action) {
 			AppDispatcher.waitFor([FoodStore.dispatchToken]);
 			updateBoardState();
 			BoardStore.emitChange();
-			break;
-
-		case SnakeGameConstants.START_GAME:
 			break;
 
 	}
