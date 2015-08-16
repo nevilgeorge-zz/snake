@@ -40,13 +40,13 @@ var SnakeGameActions = {
 		});
 	},
 	updatePlayers: function(players) {
-		console.log(players);
 		AppDispatcher.dispatch({
 			actionType: SnakeGameConstants.UPDATE_PLAYERS,
 			players: players
 		});
 	},
 	startGame: function () {
+		console.log('in action');
 		AppDispatcher.dispatch({
 			actionType: SnakeGameConstants.START_GAME
 		});

@@ -122,7 +122,7 @@ function changeDirection (key, direction) {
  * Flux Board Store
  */
 var SnakeStore = assign({}, EventEmitter.prototype, {
-	
+
 	getSnakes: function () {
 		return _snakes;
 	},
@@ -139,6 +139,10 @@ var SnakeStore = assign({}, EventEmitter.prototype, {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
 
+	moveSnakes: function() {
+		moveSnakes();
+	}
+
 });
 
 
@@ -147,7 +151,6 @@ var SnakeStore = assign({}, EventEmitter.prototype, {
  */
 SnakeStore.dispatchToken = AppDispatcher.register(function (action) {
 	switch (action.actionType) {
-
 		case SnakeGameConstants.ADD_SNAKE:
 			addSnake(action.color);
 			SnakeStore.emitChange();
@@ -175,6 +178,10 @@ SnakeStore.dispatchToken = AppDispatcher.register(function (action) {
 		case SnakeGameConstants.START_GAME:
 			break;
 
+		// case SnakeGameConstants.UPDATE_PLAYERS:
+		// 	var newPlayer = action.players[(action.players.length - 1)];
+		// 	addSnake(newPlayer.color);
+		// 	break;
 	}
 });
 

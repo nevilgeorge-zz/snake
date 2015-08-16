@@ -9,25 +9,33 @@ var SnakeGame = React.createClass({
 		return {
 			gameStarted: false,
 			players: [],
+			currentPlayer: null,
 			playerScores: {}
 		};
 	},
 
 	startGame: function() {
 		SnakeGameActions.startGame();
+		this.setState({gameStarted: true});
 	},
 
 	componentDidMount: function() {
 		var socket = io.connect();
 
 		socket.on('update:players', function(players) {
-			console.log(players);
 			SnakeGameActions.updatePlayers(players);
-			this.setState({players: players});
+			this.setState({
+				players: players,
+				currentPlayer: players[(players.length - 1)]
+			});
 		}.bind(this));
 
 		socket.on('update:scores', function(scores) {
 			this.setState({playerScores: scores});
+		}.bind(this));
+
+		socket.on('update:food', function(coords) {
+			SnakeGameActions.spawnFood(coords);
 		}.bind(this));
 	},
 
@@ -51,7 +59,7 @@ var SnakeGame = React.createClass({
 				break;
 		}
 		if (direction !== null) {
-			SnakeGameActions.changeDirection(direction);
+			SnakeGameActions.changeDirection(player.playerId, direction);
 		}
 	},
 

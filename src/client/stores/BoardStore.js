@@ -12,6 +12,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var SnakeGameConstants = require('../constants/SnakeGameConstants');
 var SnakeStore = require('./SnakeStore');
 var FoodStore = require('./FoodStore');
+var GameStore = require('./GameStore');
 
 
 /**

@@ -70,7 +70,7 @@ var GameStore = assign({}, EventEmitter.prototype, {
 /**
  * Actions from dispather
  */
-GameStore.dispatchToken = AppDispatcher.register(function (action) {
+GameStore.dispatchToken = AppDispatcher.register(function(action) {
   console.log(action);
 	switch (action.actionType) {
 
@@ -95,15 +95,13 @@ GameStore.dispatchToken = AppDispatcher.register(function (action) {
 			break;
 
 		case SnakeGameConstants.START_GAME:
-      console.log('starting')
 			startGame();
 			GameStore.emitChange();
 			break;
 
     case SnakeGameConstants.UPDATE_PLAYERS:
-      console.log('updating');
       updatePlayers(action.players);
-      BoardStore.emitChange();
+      GameStore.emitChange();
       break;
 	}
 });
