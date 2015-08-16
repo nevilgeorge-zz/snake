@@ -1,42 +1,49 @@
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var SnakeGameConstants = require('../constants/SnakeGameConstants');
-var assign = require('object-assign');
+/**
+ * Utilities
+ */
+ var EventEmitter = require('events').EventEmitter;
+ var assign = require('object-assign');
 
-var CHANGE_EVENT = 'change';
 
 /**
- * Constants, Enums
+ * React dependencies
  */
-var _MAX_SQUARE_SIDE_SIZE = 30;
+var AppDispatcher = require('../dispatcher/AppDispatcher');
+var SnakeGameConstants = require('../constants/SnakeGameConstants');
+var SnakeStore = require('./SnakeStore');
+var FoodStore = require('./FoodStore');
 
+
+/**
+ * Constants
+ */
+var SIDE_MAX = 30;
 var BoardSquareTypes = {
 	EMPTY: 'empty',
 	FOOD: 'food',
 	SNAKE: 'snake'
 };
+var CHANGE_EVENT = 'change';
 
-var Directions = {
-	UP: 'up',
-	DOWN: 'down',
-	LEFT: 'left',
-	RIGHT: 'right'
-};
 
 /**
- * Initializers
+ * Private variables
  */
-function initBoardDimensions() {
-	_numXSquares = Math.ceil(window.innerWidth / _MAX_SQUARE_SIDE_SIZE);
-	_squareSide  = Math.floor(window.innerWidth / _numXSquares) - 5;
-	_numYSquares = Math.floor(window.innerHeight / (_squareSide + 5));
-}
+var _xMax,
+    _yMax,
+    _side;
+var _board = [];
 
-function initBoardState() {
-	// initialize all to empty first
-	_board = [];
-	for (var i=0; i<_numXSquares; i++) {
-		for (var j=0; j<_numYSquares; j++) {
+
+/**
+ * Helper functions
+ */
+function initializeBoard () {
+	_xMax = Math.ceil(window.innerWidth / SIDE_MAX);
+	_side = Math.floor(window.innerWidth / _xMax) - 5;
+	_yMax = Math.floor(window.innerHeight / (_side + 5));
+	for (var i=0; i<_xMax; i++) {
+		for (var j=0; j<_yMax; j++) {
 			_board.push({
 				type: BoardSquareTypes.EMPTY,
 				x: i,
@@ -44,59 +51,78 @@ function initBoardState() {
 			});
 		}
 	}
-
-	// create food and snake indices
-	_foodPosition = {
-		type: BoardSquareTypes.FOOD,
-		x: Math.floor(Math.random() * _numXSquares),
-		y: Math.floor(Math.random() * _numYSquares)
-	};
-	_snakePositions = [
-		{
-			type: BoardSquareTypes.SNAKE,
-			x: Math.floor(_numXSquares / 2),
-			y: Math.floor(_numYSquares / 2)
-		},
-		{
-			type: BoardSquareTypes.SNAKE,
-			x: Math.floor(_numXSquares / 2) + 1,
-			y: Math.floor(_numYSquares / 2)
-		},
-		{
-			type: BoardSquareTypes.SNAKE,
-			x: Math.floor(_numXSquares / 2) + 2,
-			y: Math.floor(_numYSquares / 2)
-		}
-	];
-	_direction = Directions.LEFT;
-
-	// then update board state
-	updateBoardState();
-
-	// start play cycle
-	_game = setInterval(function () {
-		progressGame();
-	}, 600); 
 }
+initializeBoard();
+
+function updateBoardState () {
+	var snakes = SnakeStore.getSnakes(),
+	    food = FoodStore.getFood();
+    for (var i=0; i<snakes.length; i++) {
+    	_board[snakes[i].y*xMax + snakes[i].x].type = BoardSquareTypes.SNAKE;
+    }
+    for (var i=0; i<food.length; i++) {
+    	_board[food[i].y*xMax + food[i].x].type = BoardSquareTypes.FOOD;
+    }
+}
+
+function squareIsEmpty (i) {
+	if (i < _board.length-1) {
+		return (_board[i].type === BoardSquareTypes.EMPTY);
+	}
+	return false;
+}
+
+function indexToCoord (i) {
+	var coord = {};
+	coord.y = i % _xMax;
+	coord.x = i - (y*_xMax);
+	return coord;
+}
+
 
 /**
  * Flux Board Store
  */
 var BoardStore = assign({}, EventEmitter.prototype, {
 
-	getBoardState: function() {
+	getBoard: function () {
 		return _board;
 	},
 
 	getDimensions: function () {
 		return {
-			squareSide: _squareSide,
-			numXSquares: _numXSquares,
-			numYSquares: _numYSquares,
-			numSquares: _numXSquares * _numYSquares
+			xMax: _xMax,
+			yMax: _yMax,
+			side: _side
 		};
 	},
 
+	getAvailableVerticalSquares: function (numSquares) {
+		if (numSquares > 3) {
+			return [];
+		}
+		var found = false,
+			indices = [],
+		    coords = [];
+		while (!found) {
+			var base = Math.random() * _xMax * (_yMax - 3);
+			indices.push(base);
+			for (var i=1; i<numSquares; i++) {
+				indices.push(base - (i * _xMax));
+			}
+			found = true;
+			for (var i=0; i<indices.length; i++) {
+				if (!squareIsEmpty(indices[i])) {
+					found = false;
+				}
+			}
+		}
+		for (var i=0; i<indices.length; i++) {
+			coords.push(indexToCoord(i));
+		}
+		return coords;
+	},
+	
 	emitChange: function () {
 		this.emit(CHANGE_EVENT);
 	},
@@ -108,91 +134,56 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
+
 });
 
+
 /**
- * Private Variable Initializations
+ * Actions from dispather
  */
-var _numXSquares,
-	_numYSquares,
-	_squareSide,
-	_board,
-	_foodPosition,
-	_snakePositions,
-	_direction,
-	_game;
-initBoardDimensions();
-initBoardState();
-
-
-
-function progressGame() {
-	moveSnake();
-	updateBoardState();
-}
-
-function updateBoardState() {
-	_board[(_foodPosition.y * _numXSquares) + _foodPosition.x].type = BoardSquareTypes.FOOD;
-	for (i=0; i<_snakePositions.length; i++) {
-		_board[(_snakePositions[i].y * _numXSquares) + _snakePositions[i].x].type = BoardSquareTypes.SNAKE;
-	}
-	BoardStore.emitChange();
-}
-
-function moveSnake() {
-	popTail();
-	var head = _snakePositions[0];
-	var newHeadX,
-	    newHeadY;
-
-	switch (_direction) {
-		case Directions.UP:
-			newHeadX = head.x;
-			newHeadY = head.y - 1;
-			break;
-		case Directions.RIGHT:
-			newHeadX = head.x + 1;
-			newHeadY = head.y;
-			break;
-		case Directions.DOWN:
-			newHeadX = head.x;
-			newHeadY = head.y + 1;
-			break;
-		case Directions.LEFT:
-			newHeadX = head.x - 1;
-			newHeadY = head.y;
-			break;
-	}
-
-	_snakePositions.unshift({
-		type: BoardSquareTypes.SNAKE,
-		x: newHeadX,
-		y: newHeadY
-	});
-	updateBoardState();
-}
-
-function popTail() {
-	var tail = _snakePositions.pop();
-	_board[(tail.y * _numXSquares) + tail.x].type = BoardSquareTypes.EMPTY;
-}
-
-function changeDirection(direction) {
-	_direction = direction;
-}
-
-AppDispatcher.register(function (action) {
-
+BoardStore.dispatchToken = AppDispatcher.register(function (action) {
 	switch (action.actionType) {
-		case SnakeGameConstants.CHANGE_DIRECTION:
-			changeDirection(action.direction);
+
+		case SnakeGameConstants.ADD_SNAKE:
+			AppDispatcher.waitFor([SnakeStore.dispatchToken]);
+			updateBoardState();
 			BoardStore.emitChange();
 			break;
 
-		default:
-			//no op
-	}
+		case SnakeGameConstants.CHANGE_DIRECTION:
+			AppDispatcher.waitFor([SnakeStore.dispatchToken]);
+			updateBoardState();
+			BoardStore.emitChange();
+			break;
 
+		case SnakeGameConstants.END_GAME:
+			break;
+
+		case SnakeGameConstants.REMOVE_FOOD:
+			AppDispatcher.waitFor([FoodStore.dispatchToken]);
+			updateBoardState();
+			BoardStore.emitChange();
+			break;
+
+		case SnakeGameConstants.REMOVE_SNAKE:
+			AppDispatcher.waitFor([SnakeStore.dispatchToken]);
+			updateBoardState();
+			BoardStore.emitChange();
+			break;
+
+		case SnakeGameConstants.SPAWN_FOOD:
+			AppDispatcher.waitFor([FoodStore.dispatchToken]);
+			updateBoardState();
+			BoardStore.emitChange();
+			break;
+
+		case SnakeGameConstants.START_GAME:
+			break;
+
+	}
 });
 
+/**
+ * Export module
+ */
 module.exports = BoardStore;
