@@ -9,6 +9,7 @@ var Player = require('./models/Player');
 
 var clientSockets = {}; // socket -> Player
 var scoreTable = {}; // playerId -> player.score
+var players = [];
 var playerCount = 1;
 
 app.use('/', express.static(__dirname + './../client/'));
@@ -23,19 +24,22 @@ io.on('connection', function(socket) {
   var newPlayer = new Player(playerCount, 0);
   scoreTable[playerCount] = 0;
   clientSockets[socket] = newPlayer;
+  players.push(newPlayer)
   playerCount += 1;
-  socket.emit('newPlayer', newPlayer);
+  socket.emit('update:players', players);
 
   // when user gets a fruit, update player data in all clients
   socket.on('update', function(player) {
     scoreTable[player.playerId] = player.score;
-    socket.emit('newScore', player);
+    socket.emit('update:scores', scoreTable);
   });
 
   // when user disconnects, remove that user from the score table
   socket.on('disconnect', function() {
     var player = clientSockets[socket];
     delete scoreTable[player.playerId];
+    var index = players.indexOf(player);
+    players.splice(index, 1);
 
     console.log('Player #' + player.playerId + ' has left the game.')
     socket.emit('remove', player);

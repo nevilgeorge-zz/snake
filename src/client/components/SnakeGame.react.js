@@ -4,6 +4,13 @@ var SnakeGameActions = require('../actions/SnakeGameActions');
 
 var SnakeGame = React.createClass({
 
+	getInitialState: function() {
+		return {
+			gameStarted: false,
+			playerScores: {}
+		};
+	},
+
 	_onKeyDown: function (event) {
 		var direction;
 		switch (event.keyCode) {
@@ -31,13 +38,18 @@ var SnakeGame = React.createClass({
 	componentDidMount: function() {
 		var socket = io.connect();
 
-		socket.on('newPlayer', function(player) {
-			SnakeGameActions.addPlayer(player);
+		socket.on('update:players', function(players) {
+			SnakeGameActions.updatePlayers(players);
 		});
+
+		socket.on('update:scores', function(scores) {
+			this.setState({playerScores: scores});
+		})
 	},
 
 	startGame: function() {
 			SnakeGameActions.startGame();
+			this.setState({gameStarted: true});
 	},
 
 	render: function () {
@@ -48,7 +60,7 @@ var SnakeGame = React.createClass({
 		return (
 			<div>
 				<Board/>
-				<button onClick={this.startGame}>Start</button>
+				<button disabled={this.state.gameStarted} onClick={this.startGame}>Start</button>
 			</div>
 		);
 	}

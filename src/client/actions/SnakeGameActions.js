@@ -10,10 +10,10 @@ var SnakeGameActions = {
 		});
 	},
 
-	addPlayer: function(player) {
+	updatePlayers: function(players) {
 		AppDispatcher.dispatch({
-			actionType: SnakeGameConstants.ADD_PLAYER,
-			player: player
+			actionType: SnakeGameConstants.UPDATE_PLAYERS,
+			players: players
 		});
 	},
 

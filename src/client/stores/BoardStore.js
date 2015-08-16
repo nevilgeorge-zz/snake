@@ -189,8 +189,8 @@ function changeDirection(direction) {
 	_direction = direction;
 }
 
-function addNewPlayer(player) {
-	_players.push(player);
+function updatedPlayers(players) {
+	_players = players;
 }
 
 AppDispatcher.register(function (action) {
@@ -201,8 +201,8 @@ AppDispatcher.register(function (action) {
 			BoardStore.emitChange();
 			break;
 
-		case SnakeGameConstants.ADD_PLAYER:
-			addNewPlayer(action.player);
+		case SnakeGameConstants.UPDATE_PLAYERS:
+			updatedPlayers(action.players);
 			BoardStore.emitChange();
 			break;
 
