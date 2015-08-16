@@ -33,7 +33,6 @@ function progressGame () {
 }
 
 function startGame () {
-  console.log('starting game');
 	_game = setInterval(function () {
 		progressGame();
 	}, 100);
@@ -71,7 +70,6 @@ var GameStore = assign({}, EventEmitter.prototype, {
  * Actions from dispather
  */
 GameStore.dispatchToken = AppDispatcher.register(function(action) {
-  console.log(action);
 	switch (action.actionType) {
 
 		case SnakeGameConstants.ADD_SNAKE:
@@ -99,10 +97,10 @@ GameStore.dispatchToken = AppDispatcher.register(function(action) {
 			GameStore.emitChange();
 			break;
 
-    case SnakeGameConstants.UPDATE_PLAYERS:
-      updatePlayers(action.players);
-      GameStore.emitChange();
-      break;
+	    case SnakeGameConstants.UPDATE_PLAYERS:
+	      updatePlayers(action.players);
+	      GameStore.emitChange();
+	      break;
 	}
 });
 

@@ -23,18 +23,21 @@ var SnakeGame = React.createClass({
 		var socket = io.connect();
 
 		socket.on('update:players', function(players) {
+			console.log('Updating players');
 			SnakeGameActions.updatePlayers(players);
-			this.setState({
-				players: players,
-				currentPlayer: players[(players.length - 1)]
-			});
+			// this.setState({
+			// 	players: players,
+			// 	currentPlayer: players[(players.length - 1)]
+			// });
 		}.bind(this));
 
 		socket.on('update:scores', function(scores) {
+			console.log('Updating scores');
 			this.setState({playerScores: scores});
 		}.bind(this));
 
 		socket.on('update:food', function(coords) {
+			console.log('Updating food');
 			SnakeGameActions.spawnFood(coords);
 		}.bind(this));
 	},

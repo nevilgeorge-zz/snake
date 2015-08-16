@@ -57,6 +57,7 @@ initializeBoard();
 function updateBoardState () {
 	var snakes = SnakeStore.getSnakes(),
 	    food = FoodStore.getFood();
+	console.log(snakes);
     for (var i=0; i<snakes.length; i++) {
     	_board[snakes[i].y*xMax + snakes[i].x].type = BoardSquareTypes.SNAKE;
     }
@@ -73,9 +74,15 @@ function squareIsEmpty (i) {
 }
 
 function indexToCoord (i) {
+	if (i === 0) {
+		return {
+			x: 0,
+			y: 0
+		};
+	}
 	var coord = {};
-	coord.y = i % _xMax;
-	coord.x = i - (y*_xMax);
+	coord.y = Math.floor(i / _xMax) - 1;
+	coord.x = i - ((coord.y+1)*_xMax);
 	return coord;
 }
 
@@ -104,10 +111,10 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 			indices = [],
 		    coords = [];
 		while (!found) {
-			var base = Math.random() * _xMax * (_yMax - 3);
+			var base = Math.floor(Math.random() * (_xMax * (_yMax - 3)));
 			indices.push(base);
 			for (var i=1; i<numSquares; i++) {
-				indices.push(base - (i * _xMax));
+				indices.push(base + (i * _xMax));
 			}
 			found = true;
 			for (var i=0; i<indices.length; i++) {
@@ -117,7 +124,7 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 			}
 		}
 		for (var i=0; i<indices.length; i++) {
-			coords.push(indexToCoord(i));
+			coords.push(indexToCoord(indices[i]));
 		}
 		return coords;
 	},
@@ -145,6 +152,7 @@ BoardStore.dispatchToken = AppDispatcher.register(function (action) {
 		case SnakeGameConstants.ADD_SNAKE:
 			AppDispatcher.waitFor([SnakeStore.dispatchToken]);
 			updateBoardState();
+			console.log('hi');
 			BoardStore.emitChange();
 			break;
 

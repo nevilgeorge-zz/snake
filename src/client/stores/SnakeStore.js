@@ -178,10 +178,10 @@ SnakeStore.dispatchToken = AppDispatcher.register(function (action) {
 		case SnakeGameConstants.START_GAME:
 			break;
 
-		// case SnakeGameConstants.UPDATE_PLAYERS:
-		// 	var newPlayer = action.players[(action.players.length - 1)];
-		// 	addSnake(newPlayer.color);
-		// 	break;
+		case SnakeGameConstants.UPDATE_PLAYERS:
+			var newPlayer = action.players.pop();
+			addSnake(newPlayer.color);
+			break;
 	}
 });
 
