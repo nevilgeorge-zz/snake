@@ -26,7 +26,7 @@ io.on('connection', function(socket) {
   clientSockets[socket] = newPlayer;
   players.push(newPlayer)
   playerCount += 1;
-  socket.emit('update:players', players);
+  io.sockets.emit('update:players', players);
 
   // when user gets a fruit, update player data in all clients
   socket.on('update', function(player) {

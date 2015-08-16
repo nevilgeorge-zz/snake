@@ -7,6 +7,7 @@ var SnakeGame = React.createClass({
 	getInitialState: function() {
 		return {
 			gameStarted: false,
+			players: [],
 			playerScores: {}
 		};
 	},
@@ -40,11 +41,12 @@ var SnakeGame = React.createClass({
 
 		socket.on('update:players', function(players) {
 			SnakeGameActions.updatePlayers(players);
-		});
+			this.setState({players: players});
+		}.bind(this));
 
 		socket.on('update:scores', function(scores) {
 			this.setState({playerScores: scores});
-		})
+		}.bind(this));
 	},
 
 	startGame: function() {
@@ -57,10 +59,15 @@ var SnakeGame = React.createClass({
 		$('html').keydown(function(e){
 	        self._onKeyDown(e);
 	    });
+
+		var playerList = this.state.players.map(function(player, i) {
+			return <li key={i}>{player.playerId}</li>;
+		});
 		return (
 			<div>
 				<Board/>
 				<button disabled={this.state.gameStarted} onClick={this.startGame}>Start</button>
+				<ul>{playerList}</ul>
 			</div>
 		);
 	}

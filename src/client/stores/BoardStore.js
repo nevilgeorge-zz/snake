@@ -137,6 +137,7 @@ initBoardState();
 function progressGame() {
 	moveSnake();
 	updateBoardState();
+	// listenToSocket();
 }
 
 function updateBoardState() {
@@ -179,6 +180,17 @@ function moveSnake() {
 	});
 	updateBoardState();
 }
+
+// function listenToSocket() {
+// 	var socket = io.connect();
+// 	socket.on('update:players', function(players) {
+// 		console.log(players);
+// 	});
+//
+// 	socket.on('update:scores', function(scores) {
+// 		this.setState({playerScores: scores});
+// 	});
+// }
 
 function popTail() {
 	var tail = _snakePositions.pop();
