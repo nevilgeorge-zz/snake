@@ -46,7 +46,6 @@ var SnakeGameActions = {
 		});
 	},
 	startGame: function () {
-		console.log('in action');
 		AppDispatcher.dispatch({
 			actionType: SnakeGameConstants.START_GAME
 		});

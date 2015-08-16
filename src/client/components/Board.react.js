@@ -1,11 +1,11 @@
 var React = require('react');
 var BoardSquare = require('./BoardSquare.react');
-var BoardStore = require('../stores/BoardStore');
+var GameStore = require('../stores/GameStore');
 
 function getBoardState () {
 	return {
-		boardState: BoardStore.getBoard(),
-		dimensions: BoardStore.getDimensions()
+		boardState: GameStore.getBoard(),
+		dimensions: GameStore.getDimensions()
 	};
 }
 
@@ -16,15 +16,16 @@ var Board = React.createClass({
 	},
 
 	componentDidMount: function () {
-		BoardStore.addChangeListener(this._onChange);
+		GameStore.addChangeListener(this._onChange);
 	},
 
 	componentWillUnmount: function () {
-		BoardStore.removeChangeListener(this._onChange);
+		GameStore.removeChangeListener(this._onChange);
 	},
 
 
 	render: function () {
+		console.log('re-rendering');
 		var boardState = this.state.boardState;
 		var board = [];
 
@@ -33,6 +34,7 @@ var Board = React.createClass({
 
 			for (var j=0; j<this.state.dimensions.xMax; j++) {
 				var square = boardState[(i*this.state.dimensions.xMax) + j];
+				console.log(square.type);
 				rowSquares.push(
 					<BoardSquare
 						key={j}
