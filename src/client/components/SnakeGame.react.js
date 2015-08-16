@@ -1,5 +1,6 @@
-var Board = require('./Board.react');
 var React = require('react');
+var GameInfo = require('./GameInfo.react');
+var Board = require('./Board.react');
 var SnakeGameActions = require('../actions/SnakeGameActions');
 
 var SnakeGame = React.createClass({
@@ -35,6 +36,8 @@ var SnakeGame = React.createClass({
 	    });
 		return (
 			<div>
+				<GameInfo
+				/>
 				<Board 
 				/>
 			</div>
