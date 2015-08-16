@@ -1,0 +1,55 @@
+/************
+ * Partials *
+ ************/
+/**************
+ * Typography *
+ **************/
+/**********
+ * Colors *
+ **********/
+/***********
+ * Modules *
+ ***********/
+/************
+ * Partials *
+ ************/
+ul.board {
+  margin: 0 auto;
+  list-style: none; }
+  ul.board li.board-row ul.board-row-list {
+    list-style: none; }
+    ul.board li.board-row ul.board-row-list li {
+      float: left;
+      border: 1px solid #fff;
+      border-style: solid solid none none; }
+    ul.board li.board-row ul.board-row-list li.board-square {
+      background-color: #fff;
+      border-color: #eee; }
+    ul.board li.board-row ul.board-row-list li.snake-square {
+      background-color: #47AAD6;
+      border-color: #47AAD6; }
+    ul.board li.board-row ul.board-row-list li.food-square {
+      background-color: #9660D6;
+      border-color: #9660D6; }
+    ul.board li.board-row ul.board-row-list li:first-child {
+      border-style: solid solid none solid; }
+  ul.board li.board-row:last-child ul.board-row-list li {
+    border-style: solid solid solid none; }
+  ul.board li.board-row:last-child ul.board-row-list li:first-child {
+    border-style: solid solid solid solid; }
+
+/***********
+ * Globals *
+ ***********/
+html, body, div, span, h1, h2, h3, h4,
+h5, h6, p, a, img, i, ol, ul, li, form,
+label, table, caption {
+  margin: 0;
+  padding: 0; }
+
+html, body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.4; }
+
+/*# sourceMappingURL=main.css.map */

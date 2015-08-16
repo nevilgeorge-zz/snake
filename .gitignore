@@ -1,1 +1,4 @@
 node_modules/
+src/client/bundle*
+src/client/assets/styles/main.css.map
+src/client/assets/styles/.sass-cache
