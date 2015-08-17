@@ -50,12 +50,14 @@ var _game,
 function progressGame () {
 	moveSnakes();
 	updateBoardState();
+	GameStore.emitChange();
 }
 
 function startGame () {
+	addFood(getAvailableVerticalSquares(1));
 	_game = setInterval(function () {
 		progressGame();
-	}, 3000);
+	}, 100);
 }
 
 function endGame () {
@@ -72,7 +74,7 @@ function updatePlayers(players) {
  */
 function addSnake (color) {
 	var key = _snakes.length;
-	var coords = getAvailableVerticalSquares(2);
+	var coords = getAvailableVerticalSquares(3);
 	_snakes.push({
 		key: key,
 		coords: coords,
@@ -80,7 +82,6 @@ function addSnake (color) {
 		points: 0,
 		color: color
 	});
-	updateBoardState();
 }
 
 function removeSnake (key) {
@@ -118,7 +119,8 @@ function moveSnakes () {
 				newHead.y = head.y;
 				break;
 		}
-		_snakes[i].coords.pop();
+		var tail = _snakes[i].coords.pop();
+		_board[tail.y*_xMax + tail.x].type = BoardSquareTypes.EMPTY;
 		_snakes[i].coords.unshift(newHead);
 		eat(i);
 	}
@@ -132,7 +134,7 @@ function eat (key) {
 				if (head.x === _food[j].x && head.y === _food[j].y) {
 					_snakes[i].points += 1;
 					removeFood(j);
-					addFood();
+					addFood(getAvailableVerticalSquares(1));
 				}
 			}
 			return;
@@ -288,42 +290,50 @@ GameStore.dispatchToken = AppDispatcher.register(function(action) {
 
 		case SnakeGameConstants.ADD_SNAKE:
 			addSnake(action.color);
+			updateBoardState();
 			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.CHANGE_DIRECTION:
 			changeDirection(action.key, action.direction);
+			updateBoardState();
 			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.END_GAME:
 			endGame();
+			updateBoardState();
 			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.REMOVE_FOOD:
 			removeFood(action.key);
+			updateBoardState();
 			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.REMOVE_SNAKE:
 			removeSnake(action.key);
+			updateBoardState();
 			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.SPAWN_FOOD:
 			addFood(action.coords);
+			updateBoardState();
 			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.START_GAME:
 			startGame();
+			updateBoardState();
 			GameStore.emitChange();
 			break;
 
 	    case SnakeGameConstants.UPDATE_PLAYERS:
 	    	var newPlayer = action.players[action.players.length-1];
 	    	addSnake(newPlayer.color);
+	    	updateBoardState();
 	      	GameStore.emitChange();
 	      	break;
 	}

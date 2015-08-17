@@ -25,10 +25,10 @@ var SnakeGame = React.createClass({
 		socket.on('update:players', function(players) {
 			console.log('Updating players');
 			SnakeGameActions.updatePlayers(players);
-			// this.setState({
-			// 	players: players,
-			// 	currentPlayer: players[(players.length - 1)]
-			// });
+			this.setState({
+				players: players,
+				currentPlayer: players[(players.length - 1)]
+			});
 		}.bind(this));
 
 		socket.on('update:scores', function(scores) {
@@ -62,7 +62,7 @@ var SnakeGame = React.createClass({
 				break;
 		}
 		if (direction !== null) {
-			SnakeGameActions.changeDirection(player.playerId, direction);
+			SnakeGameActions.changeDirection(0, direction);
 		}
 	},
 

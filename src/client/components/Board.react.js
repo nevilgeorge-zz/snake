@@ -25,7 +25,6 @@ var Board = React.createClass({
 
 
 	render: function () {
-		console.log('re-rendering');
 		var boardState = this.state.boardState;
 		var board = [];
 
@@ -34,7 +33,6 @@ var Board = React.createClass({
 
 			for (var j=0; j<this.state.dimensions.xMax; j++) {
 				var square = boardState[(i*this.state.dimensions.xMax) + j];
-				console.log(square.type);
 				rowSquares.push(
 					<BoardSquare
 						key={j}
