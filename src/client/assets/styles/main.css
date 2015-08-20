@@ -17,17 +17,25 @@ body {
   background-color: #fff; }
   body div.snake-game {
     position: relative;
-    margin: 50px auto;
+    margin: 100px auto 0 auto;
     text-align: center; }
     body div.snake-game h1.snake-score {
       font-size: 20px;
-      font-weight: normal; }
+      font-weight: normal;
+      text-align: center; }
+      body div.snake-game h1.snake-score ul {
+        list-style: none;
+        overflow: auto; }
+        body div.snake-game h1.snake-score ul li {
+          display: inline-block; }
+        body div.snake-game h1.snake-score ul li:first-child {
+          margin-right: 20px; }
     body div.snake-game div.snake-board {
       margin: auto;
       background: #fff;
       outline: none;
       overflow: hidden; }
-      body div.snake-game div.snake-board div.body-cell, body div.snake-game div.snake-board div.food-cell, body div.snake-game div.snake-board div.null-cell {
+      body div.snake-game div.snake-board div.body-1-cell, body div.snake-game div.snake-board div.body-2-cell, body div.snake-game div.snake-board div.food-cell, body div.snake-game div.snake-board div.null-cell {
         float: left;
         width: 30px;
         height: 30px;
@@ -39,18 +47,21 @@ body {
       body div.snake-game div.snake-board div.null-cell {
         background: #fff;
         border-color: #eee; }
-      body div.snake-game div.snake-board div.body-cell {
+      body div.snake-game div.snake-board div.body-1-cell {
         background: #47AAD6;
         border-color: #47AAD6; }
+      body div.snake-game div.snake-board div.body-2-cell {
+        background: #FFB155;
+        border-color: #FFB155; }
       body div.snake-game div.snake-board div.food-cell {
         background: #0b3; }
-      body div.snake-game div.snake-board div:nth-child(15n+1) {
+      body div.snake-game div.snake-board div:nth-child(30n+1) {
         border-style: solid solid none solid; }
-      body div.snake-game div.snake-board div:nth-child(n+211) {
+      body div.snake-game div.snake-board div:nth-child(n+511) {
         border-style: solid solid solid none; }
-      body div.snake-game div.snake-board div:nth-child(211) {
+      body div.snake-game div.snake-board div:nth-child(511) {
         border-style: solid; }
-    body div.snake-game div.snake-board.game-over div.body-cell {
+    body div.snake-game div.snake-board.game-over div.body-1-cell, body div.snake-game div.snake-board.game-over div.body-2-cell {
       background: #d04; }
 
 div.snake-controls {

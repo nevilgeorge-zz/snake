@@ -1,5 +1,5 @@
-$NUM_ROWS: 15; // 18
-$NUM_COLS: 15; // 38
+$NUM_ROWS: 18; // 18
+$NUM_COLS: 30; // 38
 $LAST_ROW_START: (($NUM_ROWS - 1) * $NUM_COLS) + 1;
 
 body {
@@ -7,12 +7,25 @@ body {
 
 	div.snake-game {
 		position: relative;
-		margin: 50px auto;
+		margin: 100px auto 0 auto;
 		text-align: center;
 
 		h1.snake-score {
 			font-size: 20px;
 			font-weight: normal;
+			text-align: center;
+
+			ul {
+				list-style: none;
+				overflow: auto;
+
+				li {
+					display: inline-block;
+				}
+				li:first-child {
+					margin-right: 20px;
+				}
+			}
 		}
 		div.snake-board {
 			margin: auto;
@@ -20,7 +33,7 @@ body {
 			outline: none;
 			overflow: hidden;
 
-			div.body-cell, div.food-cell, div.null-cell {
+			div.body-1-cell, div.body-2-cell, div.food-cell, div.null-cell {
 				float: left;
 				width: 30px;
 				height: 30px;
@@ -34,9 +47,13 @@ body {
 				background: #fff;
 				border-color: #eee;
 			}
-			div.body-cell {
+			div.body-1-cell {
 				background: #47AAD6;
 				border-color: #47AAD6;
+			}
+			div.body-2-cell {
+				background: #FFB155;
+				border-color: #FFB155;
 			}
 			div.food-cell {
 				background: #0b3;
@@ -54,7 +71,7 @@ body {
 		}
 		div.snake-board.game-over {
 
-			div.body-cell {
+			div.body-1-cell, div.body-2-cell {
 				background: #d04;
 			}
 		}

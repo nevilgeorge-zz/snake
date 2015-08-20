@@ -1,17 +1,18 @@
 // React dependencies
 var React = require('react');
 var SnakeGameActions = require('../actions/SnakeGameActions');
-var SnakeGameStore = require('../stores/SnakeGameStore');
+var GameStore = require('../stores/GameStore');
+var SnakeStore = require('../stores/SnakeStore');
 
 // Constants
-var BODY = 1, FOOD = 2;
+var BODY_1 = 1, BODY_2 = 2, FOOD = 3;
 var KEYS = {left: 37, up: 38, right: 39, down: 40};
 var DIRS = {37: true, 38: true, 39: true, 40: true};
 
 
 // Helper functions
-function getSnakeGameStoreState() {
-	return SnakeGameStore.getGameState();
+function getGameStoreState() {
+	return GameStore.getGameState();
 }
 
 
@@ -25,9 +26,9 @@ var SnakeGame = React.createClass({
 		    snake_2 = [start_2];
 
 		var board = [];
-		board[start_1] = BODY;
-		board[start_2] = BODY;
-		var gameState = getSnakeGameStoreState();
+		board[start_1] = BODY_1;
+		board[start_2] = BODY_2;
+		var gameState = getGameStoreState();
 		return {
 			snakes: [snake_1, snake_2],
 			board: board,
@@ -39,7 +40,7 @@ var SnakeGame = React.createClass({
 	},
 
 	componentDidMount: function() {
-		SnakeGameStore.addChangeListener(this._onChange);
+		GameStore.addChangeListener(this._onChange);
 		this._focus();
 	},
 
@@ -48,7 +49,7 @@ var SnakeGame = React.createClass({
 	},
 
 	_onChange: function () {
-		var gameState = getSnakeGameStoreState();
+		var gameState = getGameStoreState();
 		this.setState(
 			{
 				paused: gameState.paused,
@@ -84,19 +85,17 @@ var SnakeGame = React.createClass({
 		var growths = this.state.growths;
 		var direction = this.state.direction;
 
-		var numRows = this.props.numRows || 15;
-		var numCols = this.props.numCols || 15;
+		var numRows = this.props.numRows || 18;
+		var numCols = this.props.numCols || 30;
 
 		var head,
 		    needsFood;
 		for (var i=0; i<snakes.length; i++) {
-			head = SnakeGameStore.getNextIndex(snakes[i][0], direction, numRows, numCols);
+			head = SnakeStore.getNextIndex(snakes[i][0], direction, numRows, numCols);
 
-			for (var j=0; j<snakes.length; j++) {
-				if (snakes[j].indexOf(head) != -1) {
-					this.setState({gameOver: true});
-					return;
-				}
+			if (SnakeStore.hasCollided(snakes, head)) {
+				this.setState({gameOver: true});
+				return;
 			}
 
 			needsFood = board[head] == FOOD || snakes[i].length == 1;
@@ -112,7 +111,14 @@ var SnakeGame = React.createClass({
 			}
 
 			snakes[i].unshift(head);
-			board[head] = BODY;
+			switch(i) {
+				case 0:
+					board[head] = BODY_1;
+					break;
+				case 1:
+					board[head] = BODY_2;
+					break;
+			}
 
 			if (this._nextDirection) {
 				direction = this._nextDirection;
@@ -131,24 +137,32 @@ var SnakeGame = React.createClass({
 	},
 
 	_handleKey: function(event) {
-		var direction = event.nativeEvent.keyCode;
-		var difference = Math.abs(this.state.direction - direction);
-
-	    if (DIRS[direction] && difference !== 0 && difference !== 2) {
-	    	this._nextDirection = direction;
+		var newDirection = event.nativeEvent.keyCode;
+	    if (SnakeStore.requiresNewDirection(this.state.direction, newDirection)) {
+	    	this._nextDirection = newDirection;
 	    }
 	},
 
 	render: function() {
 		var cells = [];
-		var numRows = this.props.numRows || 15; // big: 18
-		var numCols = this.props.numCols || 15; // big: 38
+		var numRows = this.props.numRows || 18; // big: 18
+		var numCols = this.props.numCols || 30; // big: 38
 		var cellSize = this.props.cellSize || 30;
 
 		for (var row = 0; row < numRows; row++) {
 			for (var col = 0; col < numCols; col++) {
 				var code = this.state.board[numCols * row + col];
-				var type = code == BODY ? 'body' : code == FOOD ? 'food' : 'null';
+				var type;
+				switch (code) {
+					case BODY_1:
+						type = 'body-1'; break;
+					case BODY_2:
+						type = 'body-2'; break;
+					case FOOD:
+						type = 'food'; break;
+					default:
+						type = 'null'; break;
+				}
 				cells.push(<div key={numCols*row+col} className={type + '-cell'} />);
 			}
 		}
@@ -156,11 +170,13 @@ var SnakeGame = React.createClass({
 		return (
 			<div className="snake-game">
 				<h1 className="snake-score">
-					<span>Length 1: {this.state.snakes[0].length}</span>
-					<span>Length 2: {this.state.snakes[1].length}</span>
+					<ul>
+						<li>Snake 1: {this.state.snakes[0].length}</li>
+						<li>Snake 2: {this.state.snakes[1].length}</li>
+					</ul>
 				</h1>
 				<div
-					ref="board"	
+					ref="board"
 					className={'snake-board' + (this.state.gameOver ? ' game-over' : '')}
 					tabIndex={0}
 					onBlur={this._pause}
