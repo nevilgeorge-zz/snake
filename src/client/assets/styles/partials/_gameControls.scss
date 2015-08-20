@@ -1,0 +1,23 @@
+div.snake-controls {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -25px;
+	margin-left: -100px;
+
+	button {
+		margin-top: -75px;
+		width: 150px;
+		height: 150px;
+		font-size: 20px;
+		background-color: #eee;
+		border: none;
+		border-radius: 50%;
+		cursor: default;
+		opacity: 0.75;
+		outline: none;
+	}
+	button:hover {
+		opacity: 1;
+	}
+}

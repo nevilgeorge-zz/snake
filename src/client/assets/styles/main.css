@@ -13,30 +13,65 @@
 /************
  * Partials *
  ************/
-ul.board {
-  margin: 0 auto;
-  list-style: none; }
-  ul.board li.board-row ul.board-row-list {
-    list-style: none; }
-    ul.board li.board-row ul.board-row-list li {
-      float: left;
-      border: 1px solid #fff;
-      border-style: solid solid none none; }
-    ul.board li.board-row ul.board-row-list li.board-square {
-      background-color: #fff;
-      border-color: #eee; }
-    ul.board li.board-row ul.board-row-list li.snake-square {
-      background-color: #47AAD6;
-      border-color: #47AAD6; }
-    ul.board li.board-row ul.board-row-list li.food-square {
-      background-color: #9660D6;
-      border-color: #9660D6; }
-    ul.board li.board-row ul.board-row-list li:first-child {
-      border-style: solid solid none solid; }
-  ul.board li.board-row:last-child ul.board-row-list li {
-    border-style: solid solid solid none; }
-  ul.board li.board-row:last-child ul.board-row-list li:first-child {
-    border-style: solid solid solid solid; }
+body {
+  background-color: #fff; }
+  body div.snake-game {
+    position: relative;
+    margin: 50px auto;
+    text-align: center; }
+    body div.snake-game h1.snake-score {
+      font-size: 20px;
+      font-weight: normal; }
+    body div.snake-game div.snake-board {
+      margin: auto;
+      background: #fff;
+      outline: none;
+      overflow: hidden; }
+      body div.snake-game div.snake-board div.body-cell, body div.snake-game div.snake-board div.food-cell, body div.snake-game div.snake-board div.null-cell {
+        float: left;
+        width: 30px;
+        height: 30px;
+        border: 1px solid #fff;
+        border-style: solid solid none none;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        overflow: hidden; }
+      body div.snake-game div.snake-board div.null-cell {
+        background: #fff;
+        border-color: #eee; }
+      body div.snake-game div.snake-board div.body-cell {
+        background: #47AAD6;
+        border-color: #47AAD6; }
+      body div.snake-game div.snake-board div.food-cell {
+        background: #0b3; }
+      body div.snake-game div.snake-board div:nth-child(15n+1) {
+        border-style: solid solid none solid; }
+      body div.snake-game div.snake-board div:nth-child(n+211) {
+        border-style: solid solid solid none; }
+      body div.snake-game div.snake-board div:nth-child(211) {
+        border-style: solid; }
+    body div.snake-game div.snake-board.game-over div.body-cell {
+      background: #d04; }
+
+div.snake-controls {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -25px;
+  margin-left: -100px; }
+  div.snake-controls button {
+    margin-top: -75px;
+    width: 150px;
+    height: 150px;
+    font-size: 20px;
+    background-color: #eee;
+    border: none;
+    border-radius: 50%;
+    cursor: default;
+    opacity: 0.75;
+    outline: none; }
+  div.snake-controls button:hover {
+    opacity: 1; }
 
 /***********
  * Globals *

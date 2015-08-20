@@ -1,45 +1,62 @@
-ul.board {
-	margin: 0 auto;
-	list-style: none;
+$NUM_ROWS: 15; // 18
+$NUM_COLS: 15; // 38
+$LAST_ROW_START: (($NUM_ROWS - 1) * $NUM_COLS) + 1;
 
-	li.board-row {
+body {
+	background-color: #fff;
 
-		ul.board-row-list {
-			list-style: none;
+	div.snake-game {
+		position: relative;
+		margin: 50px auto;
+		text-align: center;
 
-			li {
+		h1.snake-score {
+			font-size: 20px;
+			font-weight: normal;
+		}
+		div.snake-board {
+			margin: auto;
+			background: #fff;
+			outline: none;
+			overflow: hidden;
+
+			div.body-cell, div.food-cell, div.null-cell {
 				float: left;
+				width: 30px;
+				height: 30px;
 				border: 1px solid #fff;
 				border-style: solid solid none none;
+				box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				overflow: hidden;
 			}
-			li.board-square {
-				background-color: #fff;
+			div.null-cell {
+				background: #fff;
 				border-color: #eee;
 			}
-			li.snake-square {
-				background-color: #47AAD6;
+			div.body-cell {
+				background: #47AAD6;
 				border-color: #47AAD6;
 			}
-			li.food-square {
-				background-color: #9660D6;
-				border-color: #9660D6;
+			div.food-cell {
+				background: #0b3;
 			}
-
-			li:first-child {
+			div:nth-child(#{$NUM_COLS}n+1) {
 				border-style: solid solid none solid;
 			}
-		}
-	}
-	li.board-row:last-child {
-
-		ul.board-row-list {
-
-			li {
+			div:nth-child(n+#{$LAST_ROW_START}) {
 				border-style: solid solid solid none;
 			}
-			li:first-child {
-				border-style: solid solid solid solid;
+			div:nth-child(#{$LAST_ROW_START}) {
+				border-style: solid;
+			}
+
+		}
+		div.snake-board.game-over {
+
+			div.body-cell {
+				background: #d04;
 			}
 		}
-	}
+	}	
 }
