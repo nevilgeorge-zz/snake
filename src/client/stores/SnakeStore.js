@@ -15,7 +15,7 @@ var DIRS = {37: true, 38: true, 39: true, 40: true};
 
 
 // Private variables
-var _snakes = [];
+var _snakes = [0, 30, 60, 90, 120];
 
 
 // Helper functions

@@ -1,6 +1,13 @@
 $NUM_ROWS: 18; // 18
-$NUM_COLS: 30; // 38
+$NUM_COLS: 38; // 38
 $LAST_ROW_START: (($NUM_ROWS - 1) * $NUM_COLS) + 1;
+
+$body-1: #D83267;
+$body-2: #A7CC7F;
+$body-3: #0280AD;
+$body-4: #F59F1A;
+$body-5: #F46BA3;
+
 
 body {
 	background-color: #fff;
@@ -21,9 +28,10 @@ body {
 
 				li {
 					display: inline-block;
-				}
-				li:first-child {
 					margin-right: 20px;
+				}
+				li:last-child {
+					margin-right: 0;
 				}
 			}
 		}
@@ -33,7 +41,7 @@ body {
 			outline: none;
 			overflow: hidden;
 
-			div.body-1-cell, div.body-2-cell, div.food-cell, div.null-cell {
+			div.body-1-cell, div.body-2-cell, div.body-3-cell, div.body-4-cell, div.body-5-cell, div.food-cell, div.null-cell {
 				float: left;
 				width: 30px;
 				height: 30px;
@@ -48,12 +56,24 @@ body {
 				border-color: #eee;
 			}
 			div.body-1-cell {
-				background: #47AAD6;
-				border-color: #47AAD6;
+				background: $body-1;
+				border-color: $body-1;
 			}
 			div.body-2-cell {
-				background: #FFB155;
-				border-color: #FFB155;
+				background: $body-2;
+				border-color: $body-2;
+			}
+			div.body-3-cell {
+				background: $body-3;
+				border-color: $body-3;
+			}
+			div.body-4-cell {
+				background: $body-4;
+				border-color: $body-4;
+			}
+			div.body-5-cell {
+				background: $body-5;
+				border-color: $body-5;
 			}
 			div.food-cell {
 				background: #0b3;
@@ -71,8 +91,9 @@ body {
 		}
 		div.snake-board.game-over {
 
-			div.body-1-cell, div.body-2-cell {
+			div.body-1-cell, div.body-2-cell, div.body-3-cell, div.body-4-cell, div.body-5-cell {
 				background: #d04;
+				border-color: #d04;
 			}
 		}
 	}	

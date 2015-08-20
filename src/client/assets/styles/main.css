@@ -27,15 +27,16 @@ body {
         list-style: none;
         overflow: auto; }
         body div.snake-game h1.snake-score ul li {
-          display: inline-block; }
-        body div.snake-game h1.snake-score ul li:first-child {
+          display: inline-block;
           margin-right: 20px; }
+        body div.snake-game h1.snake-score ul li:last-child {
+          margin-right: 0; }
     body div.snake-game div.snake-board {
       margin: auto;
       background: #fff;
       outline: none;
       overflow: hidden; }
-      body div.snake-game div.snake-board div.body-1-cell, body div.snake-game div.snake-board div.body-2-cell, body div.snake-game div.snake-board div.food-cell, body div.snake-game div.snake-board div.null-cell {
+      body div.snake-game div.snake-board div.body-1-cell, body div.snake-game div.snake-board div.body-2-cell, body div.snake-game div.snake-board div.body-3-cell, body div.snake-game div.snake-board div.body-4-cell, body div.snake-game div.snake-board div.body-5-cell, body div.snake-game div.snake-board div.food-cell, body div.snake-game div.snake-board div.null-cell {
         float: left;
         width: 30px;
         height: 30px;
@@ -48,21 +49,31 @@ body {
         background: #fff;
         border-color: #eee; }
       body div.snake-game div.snake-board div.body-1-cell {
-        background: #47AAD6;
-        border-color: #47AAD6; }
+        background: #D83267;
+        border-color: #D83267; }
       body div.snake-game div.snake-board div.body-2-cell {
-        background: #FFB155;
-        border-color: #FFB155; }
+        background: #A7CC7F;
+        border-color: #A7CC7F; }
+      body div.snake-game div.snake-board div.body-3-cell {
+        background: #0280AD;
+        border-color: #0280AD; }
+      body div.snake-game div.snake-board div.body-4-cell {
+        background: #F59F1A;
+        border-color: #F59F1A; }
+      body div.snake-game div.snake-board div.body-5-cell {
+        background: #F46BA3;
+        border-color: #F46BA3; }
       body div.snake-game div.snake-board div.food-cell {
         background: #0b3; }
-      body div.snake-game div.snake-board div:nth-child(30n+1) {
+      body div.snake-game div.snake-board div:nth-child(38n+1) {
         border-style: solid solid none solid; }
-      body div.snake-game div.snake-board div:nth-child(n+511) {
+      body div.snake-game div.snake-board div:nth-child(n+647) {
         border-style: solid solid solid none; }
-      body div.snake-game div.snake-board div:nth-child(511) {
+      body div.snake-game div.snake-board div:nth-child(647) {
         border-style: solid; }
-    body div.snake-game div.snake-board.game-over div.body-1-cell, body div.snake-game div.snake-board.game-over div.body-2-cell {
-      background: #d04; }
+    body div.snake-game div.snake-board.game-over div.body-1-cell, body div.snake-game div.snake-board.game-over div.body-2-cell, body div.snake-game div.snake-board.game-over div.body-3-cell, body div.snake-game div.snake-board.game-over div.body-4-cell, body div.snake-game div.snake-board.game-over div.body-5-cell {
+      background: #d04;
+      border-color: #d04; }
 
 div.snake-controls {
   position: absolute;
