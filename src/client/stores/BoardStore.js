@@ -9,34 +9,29 @@ var SnakeGameConstants = require('../constants/SnakeGameConstants');
 
 // Constants
 var CHANGE_EVENT = 'change';
+var NUM_ROWS = 18;
+var NUM_COLS = 18;
+var FOOD = 100;
 
 
 // Private variables
-var _game = {
-	paused: true,
-	gameOver: false
-};
+var _board = [];
 
 
 // Helper functions
-function pauseGame() {
-	_game.paused = true;
+function initializeBoard(snakes) {
+	for (var i=0; i<snakes.length; i++) {
+		_board[snakes[i][0]] = i+1;
+	}
 }
 
-function resumeGame() {
-	_game.paused = false;
-}
-
-function resetGame() {
-	_game = {
-		paused: false,
-		gameOver: false
-	};
+function addFood(foodPos) {
+	_board[foodPos] = FOOD;
 }
 
 
 // Store
-var GameStore = assign({}, EventEmitter.prototype, {
+var BoardStore = assign({}, EventEmitter.prototype, {
 
 	emitChange: function () {
 		this.emit(CHANGE_EVENT);
@@ -47,30 +42,43 @@ var GameStore = assign({}, EventEmitter.prototype, {
 	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
-	getGame: function () {
-		return _game;
+	getBoard: function () {
+		return _board;
+	},
+	getDimensions: function () {
+		return {
+			numRows: NUM_ROWS,
+			numCols: NUM_COLS
+		};
+	},
+	getInitialBoard: function (snakes) {
+		initializeBoard(snakes);
+		return this.getBoard();
+	},
+	setSnakeToNull: function (snake) {
+		setSnakeToNull(snake);
+	},
+	addFood: function (foodPos) {
+		addFood(foodPos);
+	},
+	updateBoard: function (board) {
+		_board = board;
 	}
 
 });
 
 
 // Actions
-GameStore.dispatchToken = AppDispatcher.register(function (action) {
+BoardStore.dispatchToken = AppDispatcher.register(function (action) {
 	switch (action.actionType) {
 
 		case SnakeGameConstants.PAUSE_GAME:
-			pauseGame();
-			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.RESUME_GAME:
-			resumeGame();
-			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.RESET_GAME:
-			resetGame();
-			GameStore.emitChange();
 			break;
 
 		default:
@@ -79,6 +87,5 @@ GameStore.dispatchToken = AppDispatcher.register(function (action) {
 	}
 });
 
-
 // Module export
-module.exports = GameStore;
+module.exports = BoardStore;

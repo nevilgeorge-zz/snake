@@ -9,6 +9,12 @@ $base-line-height: 1.4;
 /**********
  * Colors *
  **********/
+$body-1: #D83267;
+$body-2: #A7CC7F;
+$body-3: #0280AD;
+$body-4: #F59F1A;
+$body-5: #F46BA3;
+$food: #0b3;
 
 
 /***********
@@ -20,5 +26,8 @@ $base-line-height: 1.4;
 /************
  * Partials *
  ************/
+@import "scores";
 @import "board";
 @import "gameControls";
+@import "snakes";
+@import "food";

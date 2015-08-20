@@ -17,3 +17,13 @@ html, body {
 	font-size: $base-font-size;
 	line-height: $base-line-height;
 }
+
+
+body {
+	background-color: #fff;
+
+	div.game-wrapper {
+		margin: 0 auto;
+		text-align: center;
+	}
+}

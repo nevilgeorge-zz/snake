@@ -1,0 +1,35 @@
+div.scores {
+
+	ul {
+		padding: 20px 0;
+		font-size: 25px;
+		font-weight: bold;
+		overflow: auto;
+
+		li {
+			display: inline-block;
+			margin: 0 10px;
+			width: 60px;
+			height: 60px;
+			text-align: center;
+			line-height: 60px;
+			border: 1px solid #bbb;
+			border-radius: 50%;
+		}
+		li.body-1 {
+			color: $body-1;
+		}
+		li.body-2 {
+			color: $body-2;
+		}
+		li.body-3 {
+			color: $body-3;
+		}
+		li.body-4 {
+			color: $body-4;
+		}
+		li.body-5 {
+			color: $body-5;
+		}
+	}
+}

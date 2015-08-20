@@ -9,34 +9,31 @@ var SnakeGameConstants = require('../constants/SnakeGameConstants');
 
 // Constants
 var CHANGE_EVENT = 'change';
+var FOOD = 100;
 
 
 // Private variables
-var _game = {
-	paused: true,
-	gameOver: false
-};
+var _food = [];
 
 
 // Helper functions
-function pauseGame() {
-	_game.paused = true;
+function needsFood(board, nextHead, snake) {
+	return (board[nextHead] == FOOD || snake.length == 1);
 }
 
-function resumeGame() {
-	_game.paused = false;
-}
+function addFood(dimensions, board) {
+	var ii,
+	    numCells = dimensions.numRows * dimensions.numCols;
 
-function resetGame() {
-	_game = {
-		paused: false,
-		gameOver: false
-	};
+	do { ii = Math.floor(Math.random() * numCells); } while (board[ii]);
+	_food.push(ii);
+
+	return ii;
 }
 
 
 // Store
-var GameStore = assign({}, EventEmitter.prototype, {
+var FoodStore = assign({}, EventEmitter.prototype, {
 
 	emitChange: function () {
 		this.emit(CHANGE_EVENT);
@@ -47,30 +44,30 @@ var GameStore = assign({}, EventEmitter.prototype, {
 	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
-	getGame: function () {
-		return _game;
+	getFood: function () {
+		return _food;
+	},
+	needsFood: function (board, nextHead, snake) {
+		return needsFood(board, nextHead, snake);
+	},
+	addFood: function (dimensions, board) {
+		return addFood(dimensions, board);
 	}
 
 });
 
 
 // Actions
-GameStore.dispatchToken = AppDispatcher.register(function (action) {
+FoodStore.dispatchToken = AppDispatcher.register(function (action) {
 	switch (action.actionType) {
 
 		case SnakeGameConstants.PAUSE_GAME:
-			pauseGame();
-			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.RESUME_GAME:
-			resumeGame();
-			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.RESET_GAME:
-			resetGame();
-			GameStore.emitChange();
 			break;
 
 		default:
@@ -79,6 +76,5 @@ GameStore.dispatchToken = AppDispatcher.register(function (action) {
 	}
 });
 
-
 // Module export
-module.exports = GameStore;
+module.exports = FoodStore;

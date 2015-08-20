@@ -2,15 +2,25 @@
 var React = require('react');
 var SnakeGameActions = require('../actions/SnakeGameActions');
 var GameStore = require('../stores/GameStore');
+var BoardStore = require('../stores/BoardStore');
 var SnakeStore = require('../stores/SnakeStore');
+var FoodStore = require('../stores/FoodStore');
 
 // Constants
 var KEYS = {left: 37, up: 38, right: 39, down: 40};
+var FOOD = 100;
 
 
 // Helper functions
 function getGameStoreState() {
-	return GameStore.getGameState();
+	return GameStore.getGame();
+}
+
+function setSquaresToNull(board, squares) {
+	for (var i=0; i<squares.length; i++) {
+		board[squares[i]] = null;
+	}
+	return board;
 }
 
 
@@ -18,25 +28,21 @@ function getGameStoreState() {
 var SnakeGame = React.createClass({
 
 	getInitialState: function() {
-		var snakesFromStore = SnakeStore.getSnakes();
-		var starts = [],
-		    snakes = [],
-		    growths = [],
-		    board = [];
-		for (var i=0; i<snakesFromStore.length; i++) {
-			// starts[i] = this.props.startIndices[i] || snakesFromStore[i];
-			starts[i] = snakesFromStore[i];
-			snakes[i] = [starts[i]];
+		var snakes = SnakeStore.getSnakes();
+		var board = BoardStore.getInitialBoard(snakes);
+		var game = GameStore.getGame();
+
+		var growths = [];
+		for (var i=0; i<snakes.length; i++) {
 			growths[i] = 0;
-			board[starts[i]] = i+1;
 		}
-		var gameState = getGameStoreState();
+
 		return {
 			snakes: snakes,
 			board: board,
 			growths: growths,
-			paused: gameState.paused,
-			gameOver: gameState.gameOver,
+			paused: game.paused,
+			gameOver: game.gameOver,
 			direction: KEYS.right
 		}
 	},
@@ -82,45 +88,68 @@ var SnakeGame = React.createClass({
 
 	_tick: function() {
 		if (this.state.paused) { return; }
-		var snakes = this.state.snakes;
-		var board = this.state.board;
+
+		var snakes = SnakeStore.getSnakes();
+		var board = BoardStore.getBoard();
+
 		var growths = this.state.growths;
 		var direction = this.state.direction;
 
-		var numRows = this.props.numRows || 18;
-		var numCols = this.props.numCols || 38;
+		var dimensions = BoardStore.getDimensions();
+		var numRows = this.props.numRows || dimensions.numRows;
+		var numCols = this.props.numCols || dimensions.numCols;
 
-		var head,
+		var newHead,
 		    needsFood;
+
 		for (var i=0; i<snakes.length; i++) {
-			head = SnakeStore.getNextIndex(snakes[i][0], direction, numRows, numCols);
+			if (snakes[i] !== null) {
+				newHead = SnakeStore.getNextIndex(snakes[i][0], direction, numRows, numCols);
 
-			if (SnakeStore.hasCollided(snakes, head)) {
-				this.setState({gameOver: true});
-				return;
-			}
+				// Collision
+				if (SnakeStore.hasCollided(newHead)) {
+					board = setSquaresToNull(board, snakes[i]);
+					snakes[i] = null;
 
-                                   // FOOD = snakes.length+1
-			needsFood = board[head] == snakes.length+1 || snakes[i].length == 1;
-			if (needsFood) {
-				var ii, numCells = numRows * numCols;
-				do { ii = Math.floor(Math.random() * numCells); } while (board[ii]);
-				board[ii] = snakes.length+1; // FOOD = snakes.length+1
-				growths[i] += 2;
-			} else if (growths[i]) {
-				growths[i] -= 1;
-			} else {
-				board[snakes[i].pop()] = null;
-			}
+					BoardStore.updateBoard(board);
+					SnakeStore.updateSnakes(snakes);
 
-			snakes[i].unshift(head);
-			board[head] = i+1;
+					if (SnakeStore.snakesAllDied(snakes)) {
+						this.setState({gameOver: true});
+						return;
+					}
 
-			if (this._nextDirection) {
-				direction = this._nextDirection;
-				this._nextDirection = null;
+					this.setState({
+						snakes: snakes,
+						board: board
+					});
+
+					break;
+				}
+
+	            // Eating / Growing
+				if (FoodStore.needsFood(board, newHead, snakes[i])) {
+					var foodPos = FoodStore.addFood(dimensions, board);
+					board[foodPos] = FOOD;
+					growths[i] += 2;
+				} else if (growths[i]) {
+					growths[i] -= 1;
+				} else {
+					board[snakes[i].pop()] = null;
+				}
+
+				snakes[i].unshift(newHead);
+				board[newHead] = i+1;
+
+				if (this._nextDirection) {
+					direction = this._nextDirection;
+					this._nextDirection = null;
+				}
 			}
 		}
+
+		BoardStore.updateBoard(board);
+		SnakeStore.updateSnakes(snakes);
 
 		this.setState({
 			snakes: snakes,
@@ -130,6 +159,7 @@ var SnakeGame = React.createClass({
 		});
 
 		setTimeout(this._tick, 100);
+		return;
 	},
 
 	_handleKey: function(event) {
@@ -143,8 +173,9 @@ var SnakeGame = React.createClass({
 		var cells = [],
 		    snakePoints = [];
 
-		var numRows = this.props.numRows || 18; // big: 18
-		var numCols = this.props.numCols || 38; // big: 38
+		var dimensions = BoardStore.getDimensions();
+		var numRows = this.props.numRows || dimensions.numRows;
+		var numCols = this.props.numCols || dimensions.numCols;
 		var cellSize = this.props.cellSize || 30;
 		var snakes = this.state.snakes;
 
@@ -154,7 +185,7 @@ var SnakeGame = React.createClass({
 				var type;
 				if (code > 0 && code < snakes.length+1) {
 					type = 'body-'+code;
-				} else if (code === snakes.length+1) {
+				} else if (code === FOOD) {
 					type = 'food';
 				} else {
 					type = 'null';
@@ -163,18 +194,24 @@ var SnakeGame = React.createClass({
 			}
 		}
 		for (var i=0; i<snakes.length; i++) {
-			snakePoints.push(<li>Snake {i+1}: {this.state.snakes[i].length}</li>);
+			var text;
+			if (snakes[i] === null) text = "DQ";
+			else text = this.state.snakes[i].length;
+			snakePoints.push(<li key={i}
+				                 className={'body-' + (i+1)}>
+                                 {text}
+                             </li>);
 		}
 		return (
-			<div className="snake-game">
-				<h1 className="snake-score">
+			<div className="game-wrapper">
+				<div className="scores">
 					<ul>
 						{snakePoints}
 					</ul>
-				</h1>
+				</div>
 				<div
 					ref="board"
-					className={'snake-board' + (this.state.gameOver ? ' game-over' : '')}
+					className={'board' + (this.state.gameOver ? ' game-over' : '')}
 					tabIndex={0}
 					onBlur={this._pause}
 					onFocus={this._resume}

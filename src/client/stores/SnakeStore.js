@@ -15,7 +15,7 @@ var DIRS = {37: true, 38: true, 39: true, 40: true};
 
 
 // Private variables
-var _snakes = [0, 30, 60, 90, 120];
+var _snakes = [[0], [150]]; // start positions for each snake
 
 
 // Helper functions
@@ -42,13 +42,24 @@ function requiresNewDirection(currDirection, newDirection) {
 	return false;
 }
 
-function hasCollided(snakes, head) {
-	for (var i=0; i<snakes.length; i++) {
-		if (snakes[i].indexOf(head) != -1) {
-			return true;
+function hasCollided(head) {
+	for (var i=0; i<_snakes.length; i++) {
+		if (_snakes[i] !== null) {
+			if (_snakes[i].indexOf(head) != -1) {
+				return true;
+			}
 		}
 	}
 	return false;
+}
+
+function snakesAllDied(snakes) {
+	for (var i=0; i<snakes.length; i++) {
+		if (snakes[i] !== null) {
+			return false;
+		}
+	}
+	return true;
 }
 
 
@@ -75,6 +86,12 @@ var SnakeStore = assign({}, EventEmitter.prototype, {
 	},
 	hasCollided: function (snakes, head) {
 		return hasCollided(snakes, head);
+	},
+	updateSnakes: function (snakes) {
+		_snakes = snakes;
+	},
+	snakesAllDied: function (snakes) {
+		return snakesAllDied(snakes);
 	}
 
 });
@@ -91,6 +108,7 @@ SnakeStore.dispatchToken = AppDispatcher.register(function (action) {
 			break;
 
 		case SnakeGameConstants.RESET_GAME:
+			_snakes = [[0], [150]]; // start positions for each snake
 			break;
 
 		default:
@@ -102,6 +120,3 @@ SnakeStore.dispatchToken = AppDispatcher.register(function (action) {
 
 // Module export
 module.exports = SnakeStore;
-
-
-
