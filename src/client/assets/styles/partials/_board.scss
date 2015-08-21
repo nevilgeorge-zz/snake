@@ -1,8 +1,3 @@
-$NUM_ROWS: 18; // 18
-$NUM_COLS: 18; // 38
-$LAST_ROW_START: (($NUM_ROWS - 1) * $NUM_COLS) + 1;
-
-
 div.board {
 	margin: auto;
 	background: #fff;
@@ -13,26 +8,13 @@ div.board {
 		float: left;
 		width: 30px;
 		height: 30px;
-		border: 1px solid #fff;
-		border-style: solid solid none none;
 		box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		overflow: hidden;
 	}
 	div.null-cell {
 		background: #fff;
-		border-color: #eee;
 	}
-	div:nth-child(#{$NUM_COLS}n+1) {
-		border-style: solid solid none solid;
-	}
-	div:nth-child(n+#{$LAST_ROW_START}) {
-		border-style: solid solid solid none;
-	}
-	div:nth-child(#{$LAST_ROW_START}) {
-		border-style: solid;
-	}
-
 }
 div.board.game-over {
 

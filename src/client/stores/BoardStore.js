@@ -10,7 +10,7 @@ var SnakeGameConstants = require('../constants/SnakeGameConstants');
 // Constants
 var CHANGE_EVENT = 'change';
 var NUM_ROWS = 18;
-var NUM_COLS = 18;
+var NUM_COLS = 38;
 var FOOD = 100;
 
 

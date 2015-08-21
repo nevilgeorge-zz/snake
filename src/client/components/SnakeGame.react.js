@@ -100,7 +100,8 @@ var SnakeGame = React.createClass({
 		var numCols = this.props.numCols || dimensions.numCols;
 
 		var newHead,
-		    needsFood;
+		    needsFood,
+		    winningSnake;
 
 		for (var i=0; i<snakes.length; i++) {
 			if (snakes[i] !== null) {
@@ -109,12 +110,17 @@ var SnakeGame = React.createClass({
 				// Collision
 				if (SnakeStore.hasCollided(newHead)) {
 					board = setSquaresToNull(board, snakes[i]);
+					winningSnake = {
+						snake: i,
+						score: snakes[i].length
+					};
 					snakes[i] = null;
 
 					BoardStore.updateBoard(board);
 					SnakeStore.updateSnakes(snakes);
 
 					if (SnakeStore.snakesAllDied(snakes)) {
+						GameStore.setWinningSnake(winningSnake);
 						this.setState({gameOver: true});
 						return;
 					}
@@ -131,7 +137,7 @@ var SnakeGame = React.createClass({
 				if (FoodStore.needsFood(board, newHead, snakes[i])) {
 					var foodPos = FoodStore.addFood(dimensions, board);
 					board[foodPos] = FOOD;
-					growths[i] += 2;
+					growths[i] += 5;
 				} else if (growths[i]) {
 					growths[i] -= 1;
 				} else {
@@ -195,11 +201,15 @@ var SnakeGame = React.createClass({
 		}
 		for (var i=0; i<snakes.length; i++) {
 			var text;
-			if (snakes[i] === null) text = "DQ";
-			else text = this.state.snakes[i].length;
+			if (snakes[i] === null) {
+				text = "DQ";
+			} else {
+				text = this.state.snakes[i].length;
+			}
 			snakePoints.push(<li key={i}
 				                 className={'body-' + (i+1)}>
-                                 {text}
+				                 <span className="snake-number">Snake {i+1}</span>
+							     <span className="snake-score">{text}</span>
                              </li>);
 		}
 		return (
@@ -220,8 +230,14 @@ var SnakeGame = React.createClass({
 					{cells}
 				</div>
 				<div className="snake-controls">
-					{this.state.paused ? <button onClick={this._focus}>Resume</button> : null}
-					{this.state.gameOver ? <button onClick={function () {this._reset(); this._focus()}.bind(this)}>New Game</button> : null}
+					{this.state.paused ? <button onClick={this._focus}>
+					                         <h4 className="resume-game">Resume</h4>
+					                     </button> : null}
+					{this.state.gameOver ? <button onClick={function () {this._reset(); this._focus()}.bind(this)}>
+										       <h3 className="winning-snake">Snake {GameStore.getWinningSnake().snake+1} wins!</h3>
+										       <h4 className="winning-score">with {GameStore.getWinningSnake().score} points</h4>
+										       <h6 className="new-game">Click to start new game</h6>
+					                       </button> : null}
 				</div>
 			</div>
 		);

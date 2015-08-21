@@ -9,12 +9,22 @@ div.scores {
 		li {
 			display: inline-block;
 			margin: 0 10px;
-			width: 60px;
-			height: 60px;
+			width: 90px;
+			height: 90px;
 			text-align: center;
-			line-height: 60px;
-			border: 1px solid #bbb;
+			background-color: #fff;
 			border-radius: 50%;
+
+			> span {
+				display: block;
+			}
+			span.snake-number {
+				margin-top: 20px;
+				font-size: 11px;
+			}
+			span.snake-score {
+				font-size: 27px;
+			}
 		}
 		li.body-1 {
 			color: $body-1;

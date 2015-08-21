@@ -16,6 +16,7 @@ var _game = {
 	paused: true,
 	gameOver: false
 };
+var _winningSnake = null;
 
 
 // Helper functions
@@ -49,6 +50,12 @@ var GameStore = assign({}, EventEmitter.prototype, {
 	},
 	getGame: function () {
 		return _game;
+	},
+	getWinningSnake: function () {
+		return _winningSnake;
+	},
+	setWinningSnake: function (snake) {
+		_winningSnake = snake;
 	}
 
 });
