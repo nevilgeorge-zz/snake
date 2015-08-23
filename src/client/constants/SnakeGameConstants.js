@@ -9,6 +9,7 @@ module.exports = keyMirror({
 	START_GAME:       null,
 	TICK:             null,
 	END_GAME:         null,
-	CHANGE_DIRECTION: null
+	CHANGE_DIRECTION: null,
+	PAUSE_GAME: null
 
 });

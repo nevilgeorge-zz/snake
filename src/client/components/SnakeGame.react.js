@@ -16,13 +16,17 @@ var SnakeGame = React.createClass({
 		    players = PlayerStore.getPlayers(),
 		    board = BoardStore.getBoard(),
 		    boardDimensions = BoardStore.getDimensions(),
-		    boardCellConstants = BoardStore.getCellConstants();
+		    boardCellConstants = BoardStore.getCellConstants(),
+		    snakeToControl = BoardStore.getSnakeToControl(),
+		    possibleDirections = BoardStore.getPossibleDirections();
 		return {
 			gameState: gameState,
 			players: players,
 			board: board,
 			boardDimensions: boardDimensions,
-			boardCellConstants: boardCellConstants
+			boardCellConstants: boardCellConstants,
+			snakeToControl: snakeToControl,
+			possibleDirections: possibleDirections
 		};
 	},
 	componentDidMount: function () {
@@ -41,13 +45,21 @@ var SnakeGame = React.createClass({
 		BoardStore.removeChangeListener(this._onChange);
 	},
 	_onChange: function () {
-		var gameState = GameStore.getGameState();
-		var players = PlayerStore.getPlayers();
-		var board = BoardStore.getBoard();
+		var gameState = GameStore.getGameState(),
+		    players = PlayerStore.getPlayers(),
+		    board = BoardStore.getBoard(),
+		    boardDimensions = BoardStore.getDimensions(),
+		    boardCellConstants = BoardStore.getCellConstants(),
+		    snakeToControl = BoardStore.getSnakeToControl(),
+		    possibleDirections = BoardStore.getPossibleDirections();
 		this.setState({
 			gameState: gameState,
 			players: players,
-			board: board
+			board: board,
+			boardDimensions: boardDimensions,
+			boardCellConstants: boardCellConstants,
+			snakeToControl: snakeToControl,
+			possibleDirections: possibleDirections
 		});
 	},
 	render: function () {
@@ -56,7 +68,9 @@ var SnakeGame = React.createClass({
 				{/*<Scores />*/}
 				<Board board={this.state.board}
 				       dimensions={this.state.boardDimensions}
-				       boardCellConstants={this.state.boardCellConstants} />
+				       boardCellConstants={this.state.boardCellConstants}
+				       snakeToControl={this.state.snakeToControl}
+				       possibleDirections={this.state.possibleDirections} />
 				{/*<GameControls />*/}
 			</div>
 		);

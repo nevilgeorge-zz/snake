@@ -81,6 +81,12 @@ GameStore.dispatchToken = AppDispatcher.register(function (action) {
 		case SnakeGameConstants.CHANGE_DIRECTION:
 			break;
 
+		case SnakeGameConstants.PAUSE_GAME:
+			GameStore.pauseGame();
+			GameStore.emitChange();
+			console.log('pausing');
+			break;
+
 		default:
 			break;
 

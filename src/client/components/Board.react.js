@@ -11,7 +11,7 @@ var Board = React.createClass({
 		return {};
 	},
 	componentDidMount: function () {
-
+		this._focus();
 	},
 	componentWillUnmount: function () {
 
@@ -41,11 +41,31 @@ var Board = React.createClass({
 		}
 		return (
 			<div className="board"
-			     style={{width: this.props.dimensions.numCols * cellSize, height: this.props.dimensions.numRows * cellSize}}>
+			     ref="board"
+			     style={{width: this.props.dimensions.numCols * cellSize, height: this.props.dimensions.numRows * cellSize}}
+			     onKeyDown={this._handleKey}
+			     onBlur={this._pause}
+			     onFocus={this._resume}
+			     tabIndex={0}>
 				{cells}
 			</div>
 		);
-	}
+	},
+	_handleKey: function(event) {
+		var newDirection = event.nativeEvent.keyCode;
+	    if (this.props.possibleDirections[newDirection]) {
+	    	SnakeGameActions.changeDirection(this.props.snakeToControl, newDirection);
+	    }
+	},
+	_pause: function () {
+		SnakeGameActions.pauseGame();
+	},
+	_resume: function () {
+		SnakeGameActions.startGame();
+	},
+	_focus: function () {
+		this.refs.board.getDOMNode().focus();
+	},
 
 });
 

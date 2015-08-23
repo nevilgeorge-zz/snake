@@ -38,6 +38,11 @@ var SnakeGameActions = {
 			direction: direction
 		})
 	},
+	pauseGame: function () {
+		AppDispatcher.dispatch({
+			actionType: SnakeGameConstants.PAUSE_GAME
+		});
+	}
 
 };
 

@@ -91,33 +91,36 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 		}
 	},
 	tick: function () {
-		var newHead,
-		    needsFood;
-		for (var i=0; i<_snakes.length; i++) {
-			newHead = BoardStore.getNextIndex(_snakes[i].snake[0], _snakes[i].direction);
+		console.log(!GameStore.getGameState().paused);
+		if (!GameStore.getGameState().paused) {
+			var newHead,
+			    needsFood;
+			for (var i=0; i<_snakes.length; i++) {
+				newHead = BoardStore.getNextIndex(_snakes[i].snake[0], _snakes[i].direction);
 
-			// Collision
-			if (BoardStore.hasCollided(newHead)) {
-				BoardStore.removeSnake(_snakes[i].id);
-				if (_snakes.length === 0) { // all died
-					SnakeGameActions.endGame();
-					return;
+				// Collision
+				if (BoardStore.hasCollided(newHead)) {
+					BoardStore.removeSnake(_snakes[i].id);
+					if (_snakes.length === 0) { // all died
+						SnakeGameActions.endGame();
+						return;
+					}
 				}
-			}
 
-			// Eating / Growing
-			if (BoardStore.needsFood(newHead, _snakes[i].snake)) {
-				BoardStore.addFood();
-				_snakes[i].growth += 2;
-			} else if (_snakes[i].growth > 0) {
-				_snakes[i].growth -= 1;
-			} else {
-				BoardStore.emptySquares([_snakes[i].snake.pop()]);
-			}
+				// Eating / Growing
+				if (BoardStore.needsFood(newHead, _snakes[i].snake)) {
+					BoardStore.addFood();
+					_snakes[i].growth += 2;
+				} else if (_snakes[i].growth > 0) {
+					_snakes[i].growth -= 1;
+				} else {
+					BoardStore.emptySquares([_snakes[i].snake.pop()]);
+				}
 
-			// Move forward
-			_snakes[i].snake.unshift(newHead);
-			_board[newHead] = _snakes[i].id;
+				// Move forward
+				_snakes[i].snake.unshift(newHead);
+				_board[newHead] = _snakes[i].id;
+			}
 		}
 	},
 	getNextIndex: function (head, direction) {
@@ -152,11 +155,24 @@ var BoardStore = assign({}, EventEmitter.prototype, {
 		_board[foodPos] = FOOD;
 	},
 	changeDirection: function (snakeID, direction) {
+		var difference;
 		for (var i=0; i<_snakes.length; i++) {
 			if (_snakes[i].id === snakeID) {
-				_snakes[i].direction = direction;
+				difference = Math.abs(_snakes[i].direction - direction);
+				if (DIRS[direction] && difference !== 0 && difference !== 2) {
+					_snakes[i].direction = direction;
+				}
 			}
 		}
+	},
+	getSnakeToControl: function () {
+		if (_snakes.length) {
+			return _snakes[0].id;
+		}
+		return null;
+	},
+	getPossibleDirections: function () {
+		return DIRS;
 	}
 
 });
