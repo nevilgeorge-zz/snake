@@ -11,16 +11,11 @@ var SnakeGameConstants = require('../constants/SnakeGameConstants');
 var CHANGE_EVENT = 'change';
 
 // Private variables
-_paused = true;
-_gameOver = false;
-_winner = {
-	snake: null,
-	points: null
-};
+_players = [];
 
 
 // Store
-var GameStore = assign({}, EventEmitter.prototype, {
+var PlayerStore = assign({}, EventEmitter.prototype, {
 
 	emitChange: function () {
 		this.emit(CHANGE_EVENT);
@@ -31,51 +26,47 @@ var GameStore = assign({}, EventEmitter.prototype, {
 	removeChangeListener: function (callback) {
 		this.removeListener(CHANGE_EVENT, callback);
 	},
-	getGameState: function () {
-		return {
-			paused: _paused,
-			gameOver: _gameOver,
-			winner: _winner
-		};
+	getPlayers: function () {
+		return _players;
 	},
-	startGame: function () {
-		_paused = false;
+	addPlayer: function (player) {
+		_players.push(player);
 	},
-	pauseGame: function () {
-		_paused = true;
-	},
-	endGame: function () {
-		_gameOver = true;
-	},
-	setWinner: function (winner) {
-		_winner.snake = winner.snake;
-		_winner.points = winner.points;
-	},
+	removePlayer: function (playerID) {
+		for (var i=0; i<_players.length; _players++) {
+			if (_players[i].id === playerID) {
+				_players.splice(i, 1);
+			}
+		}
+	}
 
 });
 
 
 // Actions
-GameStore.dispatchToken = AppDispatcher.register(function (action) {
+PlayerStore.dispatchToken = AppDispatcher.register(function (action) {
 	switch (action.actionType) {
 
 		case SnakeGameConstants.NEW_PLAYER:
+			var newPlayer = {
+				id: _players.length
+			}
+			PlayerStore.addPlayer(newPlayer);
+			PlayerStore.emitChange();
 			break;
 
 		case SnakeGameConstants.PLAYER_LEFT:
+			PlayerStore.removePlayer(action.playerID);
+			PlayerStore.emitChange();
 			break;
 
 		case SnakeGameConstants.START_GAME:
-			GameStore.startGame();
-			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.TICK:
 			break;
 
 		case SnakeGameConstants.END_GAME:
-			GameStore.endGame();
-			GameStore.emitChange();
 			break;
 
 		case SnakeGameConstants.CHANGE_DIRECTION:
@@ -88,4 +79,4 @@ GameStore.dispatchToken = AppDispatcher.register(function (action) {
 });
 
 
-module.exports = GameStore;
+module.exports = PlayerStore;

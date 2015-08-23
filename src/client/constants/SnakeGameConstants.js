@@ -4,8 +4,11 @@ var keyMirror = require('keymirror');
 // Constants, module export
 module.exports = keyMirror({
 
-	PAUSE_GAME: null,
-	RESUME_GAME: null,
-	RESET_GAME: null,
+	NEW_PLAYER:       null,
+	PLAYER_LEFT:      null,
+	START_GAME:       null,
+	TICK:             null,
+	END_GAME:         null,
+	CHANGE_DIRECTION: null
 
 });

@@ -5,23 +5,39 @@ var SnakeGameConstants = require('../constants/SnakeGameConstants');
 // Constants, module export
 var SnakeGameActions = {
 
-	pauseGame: function () {
+	newPlayer: function () {
 		AppDispatcher.dispatch({
-			actionType: SnakeGameConstants.PAUSE_GAME,
-		});
+			actionType: SnakeGameConstants.NEW_PLAYER
+		})
 	},
-
-	resumeGame: function () {
+	playerLeft: function (playerID) {
 		AppDispatcher.dispatch({
-			actionType: SnakeGameConstants.RESUME_GAME,
-		});
+			actionType: SnakeGameConstants.PLAYER_LEFT,
+	     	playerID: playerID
+		})
 	},
-
-	resetGame: function () {
+	startGame: function () {
 		AppDispatcher.dispatch({
-			actionType: SnakeGameConstants.RESET_GAME
-		});
-	}
+			actionType: SnakeGameConstants.START_GAME
+		})
+	},
+	tick: function () {
+		AppDispatcher.dispatch({
+			actionType: SnakeGameConstants.TICK
+		})
+	},
+	endGame: function () {
+		AppDispatcher.dispatch({
+			actionType: SnakeGameConstants.END_GAME
+		})
+	},
+	changeDirection: function (snakeID, direction) {
+		AppDispatcher.dispatch({
+			actionType: SnakeGameConstants.CHANGE_DIRECTION,
+			snakeID: snakeID,
+			direction: direction
+		})
+	},
 
 };
 

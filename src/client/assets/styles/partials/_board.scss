@@ -4,7 +4,7 @@ div.board {
 	outline: none;
 	overflow: hidden;
 
-	div.body-1-cell, div.body-2-cell, div.body-3-cell, div.body-4-cell, div.body-5-cell, div.food-cell, div.null-cell {
+	div.body-0-cell, div.body-1-cell, div.body-2-cell, div.body-3-cell, div.body-4-cell, div.food-cell, div.null-cell {
 		float: left;
 		width: 30px;
 		height: 30px;
@@ -18,7 +18,7 @@ div.board {
 }
 div.board.game-over {
 
-	div.body-1-cell, div.body-2-cell, div.body-3-cell, div.body-4-cell, div.body-5-cell {
+	div.body-0-cell, div.body-1-cell, div.body-2-cell, div.body-3-cell, div.body-4-cell {
 		background: #d04;
 		border-color: #d04;
 	}
