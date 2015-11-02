@@ -6,6 +6,8 @@ const app = express();
 const http = require('http').Server(app);
 const io  = require('socket.io')(http);
 const randomColor = require('randomcolor');
+const path = require('path');
+
 const Player = require('./models/Player');
 
 const clientSockets = {}; // socket -> Player
@@ -15,10 +17,17 @@ const playerCount = 1;
 
 const SIDE_MAX = 30;
 
-app.use('/', express.static(__dirname + './../client/'));
+app.set('port', 3000);
+app.set('view engine', 'html');
+
+app.use(express.static(path.join(__dirname + './../client')));
 
 app.get('/', function(req, res) {
-  res.sendfile('index.html');
+  res.sendfile(path.join(__dirname + './../client/index.html'));
+});
+
+app.get('/play', function(req, res) {
+  res.sendfile(path.join(__dirname + './../client/play.html'));
 });
 
 io.on('connection', function(socket) {
@@ -60,6 +69,6 @@ io.on('connection', function(socket) {
   });
 });
 
-http.listen(3000, function() {
-  console.log('Listening on port 3000.');
+http.listen(app.get('port'), function() {
+  console.log('Listening on port ' + app.get('port') + '.');
 });
