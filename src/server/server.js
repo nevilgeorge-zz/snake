@@ -18,7 +18,6 @@ const playerCount = 1
 const SIDE_MAX = 30
 
 app.set('port', 3000)
-app.set('view engine', 'html')
 
 app.use(express.static(path.join(__dirname + './../client')))
 
@@ -30,6 +29,7 @@ app.get('/play', (req, res) => {
   res.sendfile(path.join(__dirname + './../client/play.html'))
 })
 
+/*
 io.on('connection', (socket) => {
   // When new user joins, add player to room.
   console.log('New player #' + playerCount + ' has joined the game.')
@@ -68,6 +68,7 @@ io.on('connection', (socket) => {
     io.sockets.emit('update:players', players)
   })
 })
+*/
 
 http.listen(app.get('port'), () => {
   console.log('Listening on port ' + app.get('port') + '.')
